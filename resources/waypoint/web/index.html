@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rush Lab Waypoint</title>
+    <style>
+        :root {
+            --marker-color: #f4d000;
+            --title-color: rgba(255, 255, 255, 0.96);
+            --text-color: rgba(255, 255, 255, 0.96);
+            --text-soft: rgba(255, 255, 255, 0.88);
+            --shadow-soft: rgba(0, 0, 0, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+            font-family: "Termina", "Montserrat", "Arial Black", Arial, sans-serif;
+        }
+
+        body {
+            width: 512px;
+            height: 1024px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background: transparent;
+            color: var(--text-color);
+        }
+
+        .marker-type {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        #marker-checkpoint {
+            padding-bottom: 8px;
+            transform-origin: bottom center;
+        }
+
+        .checkpoint-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .zone-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #f8efff;
+        }
+
+        .zone-marker__icon {
+            position: relative;
+            width: 8.4402px;
+            height: 7.3502px;
+            flex: 0 0 auto;
+        }
+
+        .zone-marker__icon img {
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 10.4401px;
+            height: 9.3502px;
+            display: block;
+            max-width: none;
+        }
+
+        .zone-marker__title {
+            width: max-content;
+            min-width: 58px;
+            height: 19px;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f8efff;
+            font-family: "Termina", "Montserrat", "Arial Black", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: normal;
+            letter-spacing: 0;
+            text-align: center;
+            white-space: nowrap;
+            overflow: visible;
+        }
+
+        .line-arrow {
+            width: 0;
+            height: 0;
+            margin-top: 12px;
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-top: 18px solid rgba(255, 255, 255, 0.95);
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.28));
+        }
+
+        #marker-small {
+            padding-bottom: 8px;
+            transform: scale(1.22);
+            transform-origin: bottom center;
+        }
+
+        .small-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .small-label {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-indent: 0.18em;
+            text-transform: uppercase;
+            color: var(--title-color);
+            -webkit-text-stroke: 1px rgba(0, 0, 0, 0.14);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .diamond {
+            width: 140px;
+            height: 140px;
+            border: 4px solid var(--marker-color);
+            border-radius: 18px;
+            background: rgba(0, 0, 0, 0.72);
+            transform: rotate(45deg);
+        }
+
+        .small-arrow {
+            margin-top: 24px;
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 20px solid var(--marker-color);
+            opacity: 0.9;
+        }
+
+        /* ==================== INTERACTION MARKER ==================== */
+        /* Replica o modal hud:interaction do battleroyale (InteractionPrompt.tsx).
+           O DUI tem textura 512x1024 (retrato); o quad mundial usa o mesmo aspect
+           (worldWidth/worldHeight = 0.5) para nao distorcer. O modal ocupa a fatia
+           inferior da textura e fica ancorado em bottom-center pela
+           drawWorldSpriteBottomCenter (parte superior transparente). */
+        #marker-interaction {
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 0;
+        }
+
+        .interaction-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            width: 512px;
+            text-transform: uppercase;
+        }
+
+        .interaction-row {
+            position: relative;
+            display: inline-flex;
+            flex-direction: row;
+            align-items: stretch;
+            height: 38px;
+            opacity: 0.85;
+        }
+
+        .interaction-key {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: #c8fe4e;
+            color: #1d1c26;
+            font-family: "Termina", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 1;
+            box-sizing: border-box;
+        }
+
+        .hold-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hold-progress-bar {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.95);
+            stroke-width: 3.5;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            transition: stroke-dashoffset 0.08s linear;
+        }
+
+        .interaction-action {
+            display: flex;
+            align-items: center;
+            height: 38px;
+            background: #1d1c26;
+            color: #f8efff;
+            font-family: "Termina", "Arial", sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 1;
+            padding: 0 18px;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        .interaction-detail-row {
+            position: relative;
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            height: 38px;
+            padding: 0 18px;
+            box-sizing: border-box;
+            background: rgba(29, 28, 38, 0.65);
+            color: rgba(248, 239, 255, 0.55);
+            font-family: "Termina", "Arial", sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .interaction-detail,
+        .interaction-detail-value {
+            white-space: nowrap;
+        }
+
+        .interaction-detail-value {
+            margin-left: 12px;
+        }
+
+        .interaction-detail-arrow {
+            position: absolute;
+            left: 50%;
+            top: calc(100% - 6px);
+            transform: translateX(-50%) rotate(180deg);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(248, 239, 255, 0.55);
+        }
+    </style>
+</head>
+<body>
+    <div id="marker-checkpoint" class="marker-type">
+        <div class="checkpoint-content">
+            <div class="zone-marker">
+                <span class="zone-marker__icon" aria-hidden="true">
+                    <img src="golf-union.svg" alt="" />
+                </span>
+                <span class="zone-marker__title" id="checkpoint-label">DISTANCIA</span>
+                <span class="zone-marker__icon" aria-hidden="true">
+                    <img src="golf-union.svg" alt="" />
+                </span>
+            </div>
+        </div>
+        <div class="line-arrow"></div>
+    </div>
+
+    <div id="marker-small" class="marker-type">
+        <div class="small-header">
+            <div class="small-label" id="small-label">DISTANCIA</div>
+            <div class="distance" id="small-distance">
+                <span class="distance-value" id="small-distance-value">0</span>
+                <span class="distance-unit">M</span>
+            </div>
+        </div>
+        <div class="diamond"></div>
+        <div class="small-arrow"></div>
+    </div>
+
+    <div id="marker-interaction" class="marker-type">
+        <div class="interaction-content">
+            <div class="interaction-row">
+                <div class="interaction-key" id="interaction-key">
+                    <span id="interaction-key-text">E</span>
+                </div>
+                <div class="interaction-action" id="interaction-action">PEGAR ITEM</div>
+                <svg class="hold-progress" preserveAspectRatio="none">
+                    <rect class="hold-progress-bar" x="2" y="2" rx="0" ry="0" pathLength="100"/>
+                </svg>
+            </div>
+            <div class="interaction-detail-row">
+                <span class="interaction-detail" id="interaction-detail"></span>
+                <span class="interaction-detail-value" id="interaction-detail-value"></span>
+                <div class="interaction-detail-arrow"></div>
+            </div>
+        </div>
+    </div>
+
+    <script defer type="module" src="script.js"></script>
+</body>
+</html>

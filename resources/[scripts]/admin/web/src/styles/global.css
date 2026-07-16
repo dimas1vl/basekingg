@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: 81 99% 65%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html {
+  font-size: 62.5% !important;
+}
+
+body {
+  overflow: hidden;
+}
+
+button:focus {
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Responsive scaling */
+@media (max-width: 3840px) {
+  html { font-size: 139% !important; }
+}
+@media (max-height: 1440px) and (max-width: 2560px) {
+  html { font-size: 85% !important; }
+}
+@media (max-width: 2560px) and (max-height: 1080px) {
+  html { font-size: 69% !important; }
+}
+@media (max-width: 1920px) {
+  html { font-size: 62.5% !important; }
+}
+@media (max-width: 1600px) {
+  html { font-size: 54% !important; }
+}
+@media (max-width: 1440px) {
+  html { font-size: 55% !important; }
+}
+@media (max-width: 1366px) {
+  html { font-size: 46% !important; }
+}
+@media (max-width: 1280px) {
+  html { font-size: 44% !important; }
+}
+
+::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary-color));
+  border-radius: 0.5rem;
+}

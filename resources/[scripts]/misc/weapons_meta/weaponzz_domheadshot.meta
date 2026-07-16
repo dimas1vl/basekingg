@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CWeaponInfoBlob>
+	<SlotNavigateOrder />
+	<SlotBestOrder />
+	<TintSpecValues />
+	<FiringPatternAliases />
+	<UpperBodyFixupExpressionData />
+	<AimingInfos />
+	<Infos>
+		<Item>
+			<Infos>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_KNIFE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_NIGHTSTICK</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HAMMER</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BAT</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_GOLFCLUB</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_CROWBAR</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BOTTLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_DAGGER</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HATCHET</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_KNUCKLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MACHETE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_FLASHLIGHT</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SWITCHBLADE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BATTLEAXE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_POOLCUE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_WRENCH</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_STONE_HATCHET</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_CANDYCANE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PISTOL_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_COMBATPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_APPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PISTOL50</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SNSPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SNSPISTOL_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HEAVYPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_VINTAGEPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MARKSMANPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_REVOLVER</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_REVOLVER_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_DOUBLEACTION</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_CERAMICPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_NAVYREVOLVER</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HEAVYREVOLVER</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_GADGETPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PERICOPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_STUNGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_FLAREGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_RAYPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PISTOLXM3</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MICROSMG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SMG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SMG_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_ASSAULTSMG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_COMBATPDW</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MINISMG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MACHINEPISTOL</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_TACTICALSMG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_GUSENBERG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_RAYCARBINE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_ASSAULTRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_ASSAULTRIFLE_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_CARBINERIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_CARBINERIFLE_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_ADVANCEDRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SPECIALCARBINE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SPECIALCARBINE_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BULLPUPRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BULLPUPRIFLE_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_COMPACTRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MILITARYRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HEAVYRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_TACTICALRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BATTLERIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_COMBATMG</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_COMBATMG_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SNIPERRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HEAVYSNIPER</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HEAVYSNIPER_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MARKSMANRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MARKSMANRIFLE_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PRECISIONRIFLE</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PUMPSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_PUMPSHOTGUN_MK2</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_SAWNOFFSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_ASSAULTSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_BULLPUPSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MUSKET</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_HEAVYSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_DBSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_AUTOSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_COMBATSHOTGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_MINIGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_RAILGUN</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+				<Item type="CWeaponInfo">
+					<Name>WEAPON_RAILGUNXM3</Name>
+					<HeadShotDamageModifierPlayer value="9999.000000" />
+					<NetworkHeadShotPlayerDamageModifier value="9999.000000" />
+				</Item>
+			</Infos>
+		</Item>
+	</Infos>
+</CWeaponInfoBlob>

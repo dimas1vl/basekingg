@@ -1,0 +1,4 @@
+Killcam/Spectator no Domination
+ivulneravel: ao sair de uma safe fica 10 segundos ivulneravel está ok porem quando entra de volta e sai voce nao fica ivulneravel adicionar os 10 segundo(s) novamente.
+menu do F1 está fazendo com que o player tanka tiro, deixar esse menu para abrir somente em safezone.
+menu de carros abrir somente fora de uma dominaçao ou na safezone! dentro aparecer notificaçao falando q nao pode

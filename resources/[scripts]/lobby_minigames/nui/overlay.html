@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>LobbyMinigames Overlay</title>
+    <link rel="stylesheet" href="./overlay.css" />
+</head>
+<body>
+    <div class="hud" id="hud" hidden>
+        <div class="hud-hotbar">
+            <div class="hud-hotbar__hints">
+                <div class="hud-hint">
+                    <span class="hud-hint__key">F</span>
+                    <span class="hud-hint__action">SEGURE PARA SAIR</span>
+                </div>
+            </div>
+
+            <div class="hud-hotbar__bars">
+                <div class="hud-hotbar__armor">
+                    <div class="hud-hotbar__armor-fill" id="hud-armor-fill"></div>
+                </div>
+
+                <div class="hud-hotbar__health">
+                    <div class="hud-hotbar__health-fill" id="hud-health-fill"></div>
+                    <div class="hud-hotbar__health-chevrons">
+                        <div class="hud-hotbar__health-chevrons-inner">
+                            <img src="assets/hud/vector1_hpbar.svg" alt="" />
+                        </div>
+                    </div>
+                    <div class="hud-hotbar__health-text">
+                        <img class="hud-hotbar__health-heart" src="assets/hud/union1_ping.svg" alt="" />
+                        <span id="hud-health-value">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-hotbar__leave" id="hud-leave" hidden>
+                <div class="hud-hotbar__leave-fill" id="hud-leave-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./overlay.js"></script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi Tracking NUI</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <main id="root">
+
+    <div id="footer-controller"> 
+      <button id="footer-arrow-button" type="button" aria-label="left">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 17 13"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 6.5L7.621 0L7.621 3.5L17 3.5L17 9.5L7.621 9.5L7.621 13L0 6.5Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <p id="footer-spawn-text"></p>
+      <button id="footer-action-button" type="button" aria-label="right">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 17 13"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 6.5L7.621 0L7.621 3.5L17 3.5L17 9.5L7.621 9.5L7.621 13L0 6.5Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div id="spawn-3d">
+      <img id="frame" src="" alt="tracking-frame">
+      <canvas id="noise" width="1920" height="1080"></canvas>
+      <div id="scanlines"></div>
+      <div id="center-cut-overlay"></div>
+      <div id="description-layer">
+        <div id="description-panel">
+          <p id="description-text"></p>
+        </div>
+      </div>
+      <div id="hud-frame">
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+        <div class="hud-corner bottom-left"></div>
+        <div class="hud-corner bottom-right"></div>
+        <div class="hud-line top"></div>
+        <div class="hud-line right"></div>
+        <div class="hud-line bottom"></div>
+        <div class="hud-line left"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Status HUD (canto superior esquerdo) -->
+  <div id="tracking-status" class="hidden">
+    <div class="ts-row ts-head"><span class="ts-label">Modo</span><span class="ts-val" id="ts-mode">Tracking</span></div>
+
+    <div class="ts-block" data-block="vehicles">
+      <div class="ts-row"><span class="ts-label">Veículos</span><span class="ts-val" id="ts-vehicles">0/0</span></div>
+      <div class="ts-row"><span class="ts-label">Velocidade</span><span class="ts-val" id="ts-speed">1.0x</span></div>
+      <div class="ts-row"><span class="ts-label">Intervalo</span><span class="ts-val" id="ts-interval">1.0s</span></div>
+    </div>
+
+    <div class="ts-block" data-block="parachute">
+      <div class="ts-row"><span class="ts-label">Parachutes</span><span class="ts-val" id="ts-parachute">0/0</span></div>
+      <div class="ts-row"><span class="ts-label">Intervalo</span><span class="ts-val" id="ts-parachute-interval">2.0s</span></div>
+    </div>
+
+    <div class="ts-block" data-block="runner">
+      <div class="ts-row"><span class="ts-label">Corredores</span><span class="ts-val" id="ts-runner">0/0</span></div>
+      <div class="ts-row"><span class="ts-label">Velocidade</span><span class="ts-val" id="ts-runner-speed">3.0</span></div>
+      <div class="ts-row"><span class="ts-label">Intervalo</span><span class="ts-val" id="ts-runner-interval">1.5s</span></div>
+    </div>
+
+    <div class="ts-block" data-block="roll">
+      <div class="ts-row"><span class="ts-label">Roll</span><span class="ts-val" id="ts-roll">0/0</span></div>
+      <div class="ts-row"><span class="ts-label">Intervalo</span><span class="ts-val" id="ts-roll-interval">1.5s</span></div>
+    </div>
+
+    <div class="ts-block" data-block="area">
+      <div class="ts-row"><span class="ts-label">Spawn fixo</span><span class="ts-val" id="ts-area">0/0</span></div>
+      <div class="ts-row"><span class="ts-label">Tempo de vida</span><span class="ts-val" id="ts-area-lifetime">12s</span></div>
+    </div>
+
+    <div class="ts-hint">F7 pra alterar</div>
+  </div>
+
+  <!-- Config panel (F7) -->
+  <div id="tracking-config" class="hidden">
+    <div class="tc-card">
+      <header class="tc-head">
+        <span class="tc-chip">TRACKING</span>
+        <h1>CONFIGURAÇÕES</h1>
+        <span class="tc-hint">F7 ou ESC para fechar</span>
+      </header>
+
+      <div class="tc-tabs">
+        <button class="tc-tab active" data-tab="general">GERAL</button>
+        <button class="tc-tab" data-tab="vehicles">VEÍCULOS</button>
+        <button class="tc-tab" data-tab="runner">CORRIDA</button>
+        <button class="tc-tab" data-tab="roll">ROLAMENTO</button>
+        <button class="tc-tab" data-tab="area">SPAWN</button>
+        <button class="tc-tab" data-tab="weather">CLIMA</button>
+      </div>
+
+      <div class="tc-body">
+        <section class="tc-section active" data-section="general">
+          <label class="tc-row">
+            <span class="tc-label">Blips no mapa</span>
+            <input type="checkbox" data-key="general.mapBlipsEnabled" />
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Blips de spawn</span>
+            <input type="checkbox" data-key="general.spawnBlipsEnabled" />
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Hitmarker</span>
+            <input type="checkbox" data-key="general.hitmarkerEnabled" />
+          </label>
+        </section>
+
+        <section class="tc-section" data-section="vehicles">
+          <label class="tc-row">
+            <span class="tc-label">Spawn de veículos</span>
+            <input type="checkbox" data-key="vehicles.vehicleSpawnEnabled" />
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Máx. de veículos (total)</span>
+            <input type="range" min="1" max="40" step="1" data-key="vehicles.maxGenerateVehicles" />
+            <span class="tc-value" data-bind="vehicles.maxGenerateVehicles">5</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Multiplicador de velocidade</span>
+            <input type="range" min="0.1" max="30" step="0.1" data-key="vehicles.driveSpeedMultiplier" />
+            <span class="tc-value" data-bind="vehicles.driveSpeedMultiplier">1.0</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Intervalo entre spawns (s)</span>
+            <input type="range" min="0.05" max="10" step="0.05" data-key="vehicles.spawnCooldownMs" data-unit="ms-seconds" />
+            <span class="tc-value" data-bind="vehicles.spawnCooldownMs">0.5</span>
+          </label>
+        </section>
+
+        <section class="tc-section" data-section="runner">
+          <label class="tc-row">
+            <span class="tc-label">Máx. de alvos</span>
+            <input type="range" min="1" max="20" step="1" data-key="runner.maxGeneratePeds" />
+            <span class="tc-value" data-bind="runner.maxGeneratePeds">4</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Velocidade de corrida</span>
+            <input type="range" min="0.5" max="10" step="0.1" data-key="runner.runSpeed" />
+            <span class="tc-value" data-bind="runner.runSpeed">3.0</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Intervalo entre spawns (s)</span>
+            <input type="range" min="0.1" max="10" step="0.1" data-key="runner.spawnCooldownMs" data-unit="ms-seconds" />
+            <span class="tc-value" data-bind="runner.spawnCooldownMs">1.5</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Rolamento ao mirar</span>
+            <input type="checkbox" data-key="runner.aimRollEnabled" />
+          </label>
+        </section>
+
+        <section class="tc-section" data-section="roll">
+          <label class="tc-row">
+            <span class="tc-label">Máx. de alvos</span>
+            <input type="range" min="1" max="10" step="1" data-key="roll.maxGeneratePeds" />
+            <span class="tc-value" data-bind="roll.maxGeneratePeds">6</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Intervalo entre spawns (s)</span>
+            <input type="range" min="0.1" max="10" step="0.1" data-key="roll.spawnCooldownMs" data-unit="ms-seconds" />
+            <span class="tc-value" data-bind="roll.spawnCooldownMs">1.5</span>
+          </label>
+        </section>
+
+        <section class="tc-section" data-section="area">
+          <label class="tc-row">
+            <span class="tc-label">Máx. de alvos</span>
+            <input type="range" min="1" max="10" step="1" data-key="area.maxGeneratePeds" />
+            <span class="tc-value" data-bind="area.maxGeneratePeds">6</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Tempo de vida do alvo (s)</span>
+            <input type="range" min="1" max="30" step="1" data-key="area.pedLifetimeMs" data-unit="ms-seconds" />
+            <span class="tc-value" data-bind="area.pedLifetimeMs">12</span>
+          </label>
+        </section>
+
+        <section class="tc-section" data-section="weather">
+          <label class="tc-row">
+            <span class="tc-label">Travar horário</span>
+            <input type="checkbox" data-key="weather.overrideHour" />
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Hora (0-23)</span>
+            <input type="range" min="0" max="23" step="1" data-key="weather.hour" />
+            <span class="tc-value" data-bind="weather.hour">12</span>
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Travar clima</span>
+            <input type="checkbox" data-key="weather.overrideWeather" />
+          </label>
+          <label class="tc-row">
+            <span class="tc-label">Clima</span>
+            <select class="tc-select" data-key="weather.weather">
+              <option value="EXTRASUNNY">Ensolarado forte</option>
+              <option value="CLEAR">Limpo</option>
+              <option value="CLOUDS">Nublado</option>
+              <option value="OVERCAST">Encoberto</option>
+              <option value="RAIN">Chuva</option>
+              <option value="THUNDER">Trovoada</option>
+              <option value="SMOG">Smog</option>
+              <option value="FOGGY">Neblina</option>
+              <option value="SNOW">Neve</option>
+              <option value="XMAS">Natal</option>
+              <option value="HALLOWEEN">Halloween</option>
+            </select>
+          </label>
+        </section>
+      </div>
+
+      <footer class="tc-foot">
+        <button id="tc-close" type="button">FECHAR (ESC)</button>
+      </footer>
+    </div>
+  </div>
+  <!-- React HUD: iframe self-contido carregando o build do deathmatch.
+       Renomeado em tempo de bridge: 'thud'/'tweapons'/etc do Lua viram
+       'hud'/'weapons'/etc antes de chegar no React. -->
+  <iframe
+    id="react-hud-iframe"
+    src="./react-hud/index.html"
+    style="position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; z-index: 100;"
+  ></iframe>
+
+  <script>
+    (function () {
+      'use strict';
+      var iframe = document.getElementById('react-hud-iframe');
+      if (!iframe) return;
+
+      // Mapeia ações Lua-prefixadas (t*) -> ações esperadas pelo React HUD
+      var ACTION_REMAP = {
+        thud:          'hud',
+        thudVisible:   'visible',
+        tweapons:      'weapons',
+        tweapon:       'weapon',
+        thitmarker:    'hitmarker',
+      };
+
+      var ready = false;
+      var queue = [];
+
+      function flush() {
+        while (queue.length) {
+          try { iframe.contentWindow.postMessage(queue.shift(), '*'); } catch (_) {}
+        }
+      }
+
+      iframe.addEventListener('load', function () {
+        // Pequeno delay pro React montar + registrar os useListener antes
+        setTimeout(function () { ready = true; flush(); }, 250);
+      });
+
+      window.addEventListener('message', function (e) {
+        if (!e.data || typeof e.data.action !== 'string') return;
+        // Evita loop: não reencaminha mensagens que vieram do iframe
+        if (e.source && e.source === iframe.contentWindow) return;
+
+        var action = ACTION_REMAP[e.data.action];
+        if (!action) return; // ação não é da HUD do jogador
+
+        var payload = Object.assign({}, e.data, { action: action });
+
+        if (ready && iframe.contentWindow) {
+          try { iframe.contentWindow.postMessage(payload, '*'); } catch (_) {}
+        } else {
+          queue.push(payload);
+        }
+      });
+    })();
+  </script>
+
+  <script src="./displayController.js"></script>
+  <script src="./app.js"></script>
+  <script src="./config-panel.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+import { SVGProps } from 'react'
+
+export function UncheckIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg width="40" height="20" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M40 20H0V0H40V20ZM2 18H38V2H2V18Z" fill="currentColor" />
+    </svg>
+  )
+}

@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: 219 100% 65%;
+  --color-primary: #c8fe4e;
+  --color-background: #1d1c26;
+  --color-light: #f8efff;
+}
+
+/* Map Termina font variants to Rajdhani */
+[class*="Termina:Medium"] { font-family: 'Rajdhani', sans-serif !important; font-weight: 500; }
+[class*="Termina:Demi"]   { font-family: 'Rajdhani', sans-serif !important; font-weight: 600; }
+[class*="Termina:Bold"]   { font-family: 'Rajdhani', sans-serif !important; font-weight: 700; }
+[class*="Termina:Heavy"]  { font-family: 'Rajdhani', sans-serif !important; font-weight: 700; }
+
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html {
+  font-size: 62.5% !important;
+}
+
+body {
+  overflow: hidden;
+}
+
+button:focus {
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+html {
+  font-size: 62.5% !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary-color));
+  border-radius: 0.5rem;
+}

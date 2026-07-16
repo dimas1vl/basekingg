@@ -1,0 +1,80 @@
+-- Catalog: parachute / default
+-- Applied via SetPlayerParachuteTintIndex et al on preParachuteGive.
+
+_InventarioCatalogRegistry:add({
+    {
+        id          = 'parachute_default_01',
+        name        = 'Paraquedas Padrao',
+        category    = 'parachute',
+        subcategory = 'default',
+        rarity      = 'common',
+        price       = nil,
+        purchasable = false,
+        image       = 'images/inventario/parachute_default_01.png',
+        metadata    = {
+            tint         = 0,
+            reserve_tint = 0,
+            pack_tint    = 0,
+        },
+    },
+    {
+        id          = 'parachute_red_01',
+        name        = 'Paraquedas Vermelho',
+        category    = 'parachute',
+        subcategory = 'default',
+        rarity      = 'rare',
+        price       = 120,
+        purchasable = true,
+        image       = 'images/inventario/parachute_red_01.png',
+        metadata    = {
+            tint         = 1,
+            reserve_tint = 1,
+            pack_tint    = 1,
+        },
+    },
+    {
+        id          = 'parachute_camo_01',
+        name        = 'Paraquedas Camuflado',
+        category    = 'parachute',
+        subcategory = 'default',
+        rarity      = 'epic',
+        price       = 350,
+        purchasable = true,
+        image       = 'images/inventario/parachute_camo_01.png',
+        metadata    = {
+            tint         = 3,
+            reserve_tint = 3,
+            pack_tint    = 3,
+        },
+    },
+    {
+        id          = 'parachute_gold_01',
+        name        = 'Paraquedas Dourado',
+        category    = 'parachute',
+        subcategory = 'default',
+        rarity      = 'legendary',
+        price       = 900,
+        purchasable = true,
+        image       = 'images/inventario/parachute_gold_01.png',
+        metadata    = {
+            tint         = 5,
+            reserve_tint = 5,
+            pack_tint    = 5,
+        },
+    },
+    {
+        id          = 'parachute_neon_01',
+        name        = 'Paraquedas Neon',
+        category    = 'parachute',
+        subcategory = 'default',
+        rarity      = 'mythic',
+        price       = 2000,
+        purchasable = true,
+        image       = 'images/inventario/parachute_neon_01.png',
+        metadata    = {
+            tint         = 7,
+            reserve_tint = 7,
+            pack_tint    = 7,
+        },
+    },
+})

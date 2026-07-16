@@ -1,0 +1,198 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+    user-select: none;
+    font-family: 'Termina', 'Rajdhani', 'Inter', system-ui, sans-serif;
+    color: #f8efff;
+}
+
+body {
+    pointer-events: none;
+}
+
+.hud {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    color: #f8efff;
+}
+.hud[hidden] { display: none; }
+
+.hud-hotbar {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.hud-hotbar__hints {
+    background: rgba(29, 28, 38, 0.92);
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 14px;
+    border-left: 3px solid #e8ffb5;
+    border-right: 3px solid #e8ffb5;
+    box-sizing: border-box;
+}
+
+.hud-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hud-hint__key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    min-width: 26px;
+    padding: 0 6px;
+    background: #c8fe4e;
+    color: #1d1c26;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.hud-hint__action {
+    color: #f8efff;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.hud-hotbar__bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    position: relative;
+}
+
+.hud-hotbar__armor {
+    background: rgba(29, 28, 38, 0.85);
+    height: 6px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.hud-hotbar__armor-fill {
+    position: absolute;
+    background: #f8efff;
+    height: 6px;
+    left: 0;
+    top: 0;
+    width: 0;
+    transition: width 0.2s ease-out;
+}
+
+.hud-hotbar__health {
+    background: rgba(29, 28, 38, 0.85);
+    border-left: 3px solid #e8ffb5;
+    border-right: 3px solid #e8ffb5;
+    height: 18px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.hud-hotbar__health-fill {
+    position: absolute;
+    background: #c8fe4e;
+    height: 18px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    transition: width 0.3s ease-out;
+}
+
+.hud-hotbar__health-chevrons {
+    position: absolute;
+    left: -68px;
+    top: -151px;
+    width: 577px;
+    height: 776px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hud-hotbar__health-chevrons-inner {
+    width: 577px;
+    height: 776px;
+    transform: rotate(180deg) scaleY(-1);
+    position: relative;
+}
+
+.hud-hotbar__health-chevrons-inner img {
+    position: absolute;
+    inset: -1.8% -2.43%;
+    display: block;
+    max-width: none;
+    width: 100%;
+    height: 100%;
+}
+
+.hud-hotbar__health-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    mix-blend-mode: difference;
+    color: #c8fe4e;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    z-index: 2;
+}
+
+.hud-hotbar__health-heart {
+    width: 10px;
+    height: 10px;
+    display: block;
+}
+
+.hud-hotbar__leave {
+    background: rgba(29, 28, 38, 0.85);
+    height: 4px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.hud-hotbar__leave[hidden] { display: none; }
+
+.hud-hotbar__leave-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background: #c8fe4e;
+    transition: width 0.05s linear;
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<timecycle_modifier_data version="1.000000">
+    <modifier name="arena_match" numMods="60" userFlags="0">
+        <light_dir_mult>0.000 1.000</light_dir_mult>
+        <light_artificial_int_down_intensity>0.500 0.000</light_artificial_int_down_intensity>
+        <light_artificial_int_up_intensity>0.220 0.000</light_artificial_int_up_intensity>
+        <light_amb_occ_mult_ped>0.000 0.000</light_amb_occ_mult_ped>
+        <ped_light_mult>1.000 0.400</ped_light_mult>
+        <ped_light_direction_x>0.000 0.000</ped_light_direction_x>
+        <ped_light_direction_y>0.500 0.000</ped_light_direction_y>
+        <ped_light_direction_z>0.000 0.000</ped_light_direction_z>
+        <light_amb_occ_mult_ped>0.000 0.000</light_amb_occ_mult_ped>
+        <ssao_inten>0.000 0.000</ssao_inten>
+        <light_ray_underwater_mult>0.000 0.000</light_ray_underwater_mult>
+        <dof_far>0.000 0.000</dof_far>
+        <dof_blur_far>0.000 0.000</dof_blur_far>
+        <environmental_blur_size>0.000 0.000</environmental_blur_size>
+        <lens_artefacts_intensity>0.000 0.000</lens_artefacts_intensity>
+        <lens_artefacts_min_exp_intensity>0.000 0.000</lens_artefacts_min_exp_intensity>
+        <lens_artefacts_max_exp_intensity>0.000 0.000</lens_artefacts_max_exp_intensity>
+        <dir_shadow_distance_multiplier>0.000 0.000</dir_shadow_distance_multiplier>
+        <Lensflare_visibility>0.000 0.000</Lensflare_visibility>
+        <water_reflection_far_clip>0.000 0.000</water_reflection_far_clip>
+        <water_interior>-2.000 0.000</water_interior>
+        <mirror_reflection_local_light_intensity>0.000 0.000</mirror_reflection_local_light_intensity>
+        <fog_start>10000.000 0.000</fog_start>
+        <fog_near_col_r>0.173 1.000</fog_near_col_r>
+        <fog_near_col_g>0.043 1.000</fog_near_col_g>
+        <fog_near_col_b>0.000 1.000</fog_near_col_b>
+        <fog_near_col_a>0.000 1.000</fog_near_col_a>
+        <fog_col_r>-4.120 1.000</fog_col_r>
+        <fog_col_g>0.071 1.000</fog_col_g>
+        <fog_col_b>0.000 1.000</fog_col_b>
+        <fog_col_a>0.000 1.000</fog_col_a>
+        <fog_east_col_r>0.302 1.000</fog_east_col_r>
+        <fog_east_col_g>0.075 1.000</fog_east_col_g>
+        <fog_east_col_b>0.000 1.000</fog_east_col_b>
+        <fog_east_col_a>0.000 1.000</fog_east_col_a>
+        <fog_density>0.000 0.000</fog_density>
+        <fog_falloff>5.000 0.000</fog_falloff>
+        <fog_base_height>0.000 0.000</fog_base_height>
+        <fog_alpha>0.000 1.000</fog_alpha>
+        <fog_horizon_tint_scale>4.000 4.000</fog_horizon_tint_scale>
+        <fog_hdr>1.000 1.000</fog_hdr>
+        <fog_haze_col_r>0.000 1.000</fog_haze_col_r>
+        <fog_haze_col_g>0.000 1.000</fog_haze_col_g>
+        <fog_haze_col_b>0.000 1.000</fog_haze_col_b>
+        <fog_haze_density>20.000 20.000</fog_haze_density>
+        <fog_haze_alpha>0.000 0.000</fog_haze_alpha>
+        <fog_haze_hdr>0.000 0.000</fog_haze_hdr>
+        <reflection_lod_range_start>0.000 0.000</reflection_lod_range_start>
+        <reflection_lod_range_end>0.000 0.000</reflection_lod_range_end>
+        <reflection_slod_range_start>0.000 0.000</reflection_slod_range_start>
+        <reflection_slod_range_end>0.000 0.000</reflection_slod_range_end>
+        <reflection_interior_range>0.000 0.000</reflection_interior_range>
+        <reflection_tweak_interior_amb>0.000 0.000</reflection_tweak_interior_amb>
+        <reflection_tweak_exterior_amb>0.000 0.000</reflection_tweak_exterior_amb>
+        <reflection_tweak_emissive>0.000 0.000</reflection_tweak_emissive>
+        <reflection_tweak_directional>0.000 0.000</reflection_tweak_directional>
+        <reflection_hdr_mult>0.000 0.000</reflection_hdr_mult>
+        <natural_ambient_multiplier>0.000 0.000</natural_ambient_multiplier>
+        <no_weather_fx>1.000 0.000</no_weather_fx>
+        <shadow_distance_mult>0.000 0.000</shadow_distance_mult>
+        <lod_mult_orphanhd>0.850 0.000</lod_mult_orphanhd>
+        <far_clip>50000.000 50000.000</far_clip>
+    </modifier>
+    <modifier name="goat_lobby" numMods="9" userFlags="2">
+        <light_dir_mult>14.750 0.500</light_dir_mult>
+        <light_directional_amb_bounce_enabled>1.000 1.000</light_directional_amb_bounce_enabled>
+        <light_amb_down_wrap>-1.200 0.000</light_amb_down_wrap>
+        <light_natural_amb_down_intensity>0.500 0.000</light_natural_amb_down_intensity>
+        <light_natural_amb_up_intensity>0.500 0.000</light_natural_amb_up_intensity>
+        <light_natural_amb_up_intensity_mult>2.000 0.000</light_natural_amb_up_intensity_mult>
+        <light_natural_push>0.200 1.000</light_natural_push>
+        <ped_light_mult>1.480 0.140</ped_light_mult>
+        <ped_light_direction_y>3.000 0.198</ped_light_direction_y>
+    </modifier>
+</timecycle_modifier_data>

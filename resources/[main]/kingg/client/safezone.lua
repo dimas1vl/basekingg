@@ -1,16 +1,15 @@
-local TEXTURE_DICT = 'safezone'
-local TEXTURE_NAME = 'kingg_safezone'
+local TEXTURE_DICT = "safezone"
+local TEXTURE_NAME = "kingg_safezone"
 local MARKER_HEIGHT = 9000.0
 local MARKER_COLOR = { 255, 255, 255, 100 }
-local MARKER_SCALE = 4.0
+local MARKER_SCALE = 1.98412
 
 ---@param a number
 ---@param b number
 ---@param t number
 ---@return number
 local function lerp(a, b, t)
-
-    return (1 - t) * a + t * b
+	return (1 - t) * a + t * b
 end
 
 ---@param value number
@@ -18,8 +17,7 @@ end
 ---@param max number
 ---@return number
 local function clamp(value, min, max)
-
-    return math.min(math.max(value, min), max)
+	return math.min(math.max(value, min), max)
 end
 
 ---@class SafeZoneHandlers
@@ -55,68 +53,70 @@ end
 ---@field inGas boolean
 ---@field handlers SafeZoneHandlers
 local SafeZone = {
-    active = false,
-    gas = nil,
-    safe = nil,
-    shrinking = false,
-    shrinkStartAt = 0,
-    shrinkDuration = 0,
-    shrinkFromX = 0,
-    shrinkFromY = 0,
-    shrinkFromRadius = 0,
-    blip = nil,
-    safeBlip = nil,
-    textureLoaded = false,
-    damage = 0,
-    phase = 0,
-    inGas = false,
-    handlers = {},
+	active = false,
+	gas = nil,
+	safe = nil,
+	shrinking = false,
+	shrinkStartAt = 0,
+	shrinkDuration = 0,
+	shrinkFromX = 0,
+	shrinkFromY = 0,
+	shrinkFromRadius = 0,
+	blip = nil,
+	safeBlip = nil,
+	textureLoaded = false,
+	damage = 0,
+	phase = 0,
+	inGas = false,
+	handlers = {},
 }
 
+-- 2.3 addon blip multiplier
+
 local function loadTexture()
+	if SafeZone.textureLoaded then
+		return
+	end
 
-    if SafeZone.textureLoaded then return end
+	RequestStreamedTextureDict(TEXTURE_DICT, true)
 
-    RequestStreamedTextureDict(TEXTURE_DICT, true)
+	local timeout = GetGameTimer() + 5000
 
-    local timeout = GetGameTimer() + 5000
+	while not HasStreamedTextureDictLoaded(TEXTURE_DICT) and GetGameTimer() < timeout do
+		Wait(50)
+	end
 
-    while not HasStreamedTextureDictLoaded(TEXTURE_DICT) and GetGameTimer() < timeout do
-        Wait(50)
-    end
-
-    SafeZone.textureLoaded = HasStreamedTextureDictLoaded(TEXTURE_DICT)
+	SafeZone.textureLoaded = HasStreamedTextureDictLoaded(TEXTURE_DICT)
 end
 
 local function removeBlips()
+	if SafeZone.blip then
+		RemoveBlip(SafeZone.blip)
+		SafeZone.blip = nil
+	end
 
-    if SafeZone.blip then
-        RemoveBlip(SafeZone.blip)
-        SafeZone.blip = nil
-    end
-
-    if SafeZone.safeBlip then
-        RemoveBlip(SafeZone.safeBlip)
-        SafeZone.safeBlip = nil
-    end
+	if SafeZone.safeBlip then
+		RemoveBlip(SafeZone.safeBlip)
+		SafeZone.safeBlip = nil
+	end
 end
 ---@param x number
 ---@param y number
 ---@param radius number
 local function createGasBlip(x, y, radius)
+	if SafeZone.blip then
+		RemoveBlip(SafeZone.blip)
+	end
 
-    if SafeZone.blip then
-        RemoveBlip(SafeZone.blip)
-    end
-
-    local radiusBlip = AddBlipForRadius(x,y, 0.0, radius * 4.88)
-    SetBlipColour(radiusBlip, 1)
-    SetBlipAlpha(radiusBlip, 255)
-    SetBlipSprite(radiusBlip, 959)
-    SetBlipAsShortRange(radiusBlip, true)
-    SetBlipHiddenOnLegend(radiusBlip, true)
-    SetBlipHighDetail(radiusBlip, true)
-    SafeZone.blip = radiusBlip
+	local radiusBlip = AddBlipForRadius(x, y, 0.0, radius)
+	SetBlipColour(radiusBlip, 43)
+	SetBlipAlpha(radiusBlip, 255)
+	SetBlipSprite(radiusBlip, 10)
+	-- SetBlipSprite(radiusBlip, 959)
+	SetBlipAsShortRange(radiusBlip, true)
+	SetBlipHiddenOnLegend(radiusBlip, true)
+	SetBlipHighDetail(radiusBlip, true)
+	SafeZone.blip = radiusBlip
 end
 
 -- CreateThread(function()
@@ -128,275 +128,322 @@ end
 ---@param y number
 ---@param radius number
 local function createSafeBlip(x, y, radius)
+	if SafeZone.safeBlip then
+		RemoveBlip(SafeZone.safeBlip)
+	end
 
-    if SafeZone.safeBlip then
-        RemoveBlip(SafeZone.safeBlip)
-    end
-
-    SafeZone.safeBlip = AddBlipForRadius(x, y, 0.0, radius)
-    SetBlipColour(SafeZone.safeBlip, 0)
-    SetBlipSprite(SafeZone.safeBlip, 10)
-    SetBlipAlpha(SafeZone.safeBlip, 255)
-    SetBlipScale(SafeZone.safeBlip, radius * 2.0)
+	SafeZone.safeBlip = AddBlipForRadius(x, y, 0.0, radius)
+	SetBlipColour(SafeZone.safeBlip, 0)
+	SetBlipSprite(SafeZone.safeBlip, 10)
+	SetBlipAlpha(SafeZone.safeBlip, 255)
+	SetBlipScale(SafeZone.safeBlip, radius)
 end
 
 local function updateShrink()
+	if not SafeZone.shrinking or not SafeZone.gas or not SafeZone.safe then
+		return
+	end
 
-    if not SafeZone.shrinking or not SafeZone.gas or not SafeZone.safe then return end
+	local now = GetNetworkTimeAccurate()
+	local elapsed = now - SafeZone.shrinkStartAt
 
-    local now = GetNetworkTimeAccurate()
-    local elapsed = now - SafeZone.shrinkStartAt
+	if elapsed >= SafeZone.shrinkDuration then
+		SafeZone.gas.x = SafeZone.safe.x
+		SafeZone.gas.y = SafeZone.safe.y
+		SafeZone.gas.radius = SafeZone.safe.radius
+		SafeZone.shrinking = false
+		SetBlipSprite(SafeZone.blip, 10)
+		-- SetBlipSprite(SafeZone.blip, 959)
+		return
+	end
 
-    if elapsed >= SafeZone.shrinkDuration then
+	local t = clamp(elapsed / SafeZone.shrinkDuration, 0.0, 1.0)
 
-        SafeZone.gas.x = SafeZone.safe.x
-        SafeZone.gas.y = SafeZone.safe.y
-        SafeZone.gas.radius = SafeZone.safe.radius
-        SafeZone.shrinking = false
-        SetBlipSprite(SafeZone.blip, 959)
-        return
-    end
+	SafeZone.gas.x = lerp(SafeZone.shrinkFromX, SafeZone.safe.x, t)
+	SafeZone.gas.y = lerp(SafeZone.shrinkFromY, SafeZone.safe.y, t)
+	SafeZone.gas.radius = lerp(SafeZone.shrinkFromRadius, SafeZone.safe.radius, t)
 
-    local t = clamp(elapsed / SafeZone.shrinkDuration, 0.0, 1.0)
-
-    SafeZone.gas.x = lerp(SafeZone.shrinkFromX, SafeZone.safe.x, t)
-    SafeZone.gas.y = lerp(SafeZone.shrinkFromY, SafeZone.safe.y, t)
-    SafeZone.gas.radius = lerp(SafeZone.shrinkFromRadius, SafeZone.safe.radius, t)
-
-    if SafeZone.blip then
-        SetBlipCoords(SafeZone.blip, SafeZone.gas.x, SafeZone.gas.y, 0.0)
-        SetBlipScale(SafeZone.blip, SafeZone.gas.radius * 4.88)
-        SetBlipSprite(SafeZone.blip, 958)
-    end
+	if SafeZone.blip then
+		SetBlipCoords(SafeZone.blip, SafeZone.gas.x, SafeZone.gas.y, 0.0)
+		SetBlipScale(SafeZone.blip, SafeZone.gas.radius)
+		-- SetBlipSprite(SafeZone.blip, 958)
+		SetBlipSprite(SafeZone.blip, 10)
+	end
 end
 
 local function checkPlayerPosition()
+	if not SafeZone.gas then
+		return
+	end
+	if SafeZone.damage <= 0 then
+		return
+	end
 
-    if not SafeZone.gas then return end
-    if SafeZone.damage <= 0 then return end
+	local ped = PlayerPedId()
+	local coords = GetEntityCoords(ped)
+	local dist = #(vector2(coords.x, coords.y) - vector2(SafeZone.gas.x, SafeZone.gas.y))
+	local inGas = dist > SafeZone.gas.radius
 
-    local ped = PlayerPedId()
-    local coords = GetEntityCoords(ped)
-    local dist = #(vector2(coords.x, coords.y) - vector2(SafeZone.gas.x, SafeZone.gas.y))
-    local visualRadius = SafeZone.gas.radius * MARKER_SCALE
-    local inGas = dist > visualRadius
+	if inGas ~= SafeZone.inGas then
+		SafeZone.inGas = inGas
+		LocalPlayer.state:set("inSafeZone", not inGas, false)
 
-    if inGas ~= SafeZone.inGas then
+		if inGas then
+			if SafeZone.handlers.onOut then
+				SafeZone.handlers.onOut(SafeZone.damage)
+			end
+		else
+			if SafeZone.handlers.onIn then
+				SafeZone.handlers.onIn()
+			end
+		end
+	end
 
-        SafeZone.inGas = inGas
-        LocalPlayer.state:set('inSafeZone', not inGas, false)
-
-        if inGas then
-
-            if SafeZone.handlers.onOut then
-                SafeZone.handlers.onOut(SafeZone.damage)
-            end
-        else
-
-            if SafeZone.handlers.onIn then
-                SafeZone.handlers.onIn()
-            end
-        end
-    end
-
-    if inGas then
-        if SafeZone.handlers.onDamageTick then
-            SafeZone.handlers.onDamageTick(SafeZone.damage)
-        else
-            ApplyDamageToPed(ped, SafeZone.damage, false)
-        end
-    end
+	if inGas then
+		if SafeZone.handlers.onDamageTick then
+			SafeZone.handlers.onDamageTick(SafeZone.damage)
+		else
+			ApplyDamageToPed(ped, SafeZone.damage, false)
+		end
+	end
 end
 
 local function drawMarker()
+	if not SafeZone.gas then
+		return
+	end
 
-    if not SafeZone.gas then return end
+	local gasX = SafeZone.gas.x
+	local gasY = SafeZone.gas.y
+	local gasRadius = SafeZone.gas.radius
+	local size = gasRadius * MARKER_SCALE
+	local color = MARKER_COLOR
 
-    local gasX = SafeZone.gas.x
-    local gasY = SafeZone.gas.y
-    local gasRadius = SafeZone.gas.radius
-    local size = gasRadius * MARKER_SCALE
-    local color = MARKER_COLOR
-
-    if SafeZone.textureLoaded then
-        DrawMarker(
-            1,
-            gasX, gasY, -200.0,
-            0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0,
-            size, size, MARKER_HEIGHT,
-            color[1], color[2], color[3], color[4],
-            false, false, 2,
-            false,
-            TEXTURE_DICT, TEXTURE_NAME,
-            false
-        )
-    else
-        DrawMarker(
-            1,
-            gasX, gasY, -200.0,
-            0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0,
-            size, size, MARKER_HEIGHT,
-            color[1], color[2], color[3], color[4],
-            false, false, 2,
-            false, nil, nil, false
-        )
-    end
+	if SafeZone.textureLoaded then
+		DrawMarker(
+			1,
+			gasX,
+			gasY,
+			-200.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			size,
+			size,
+			MARKER_HEIGHT,
+			color[1],
+			color[2],
+			color[3],
+			color[4],
+			false,
+			false,
+			2,
+			false,
+			TEXTURE_DICT,
+			TEXTURE_NAME,
+			false
+		)
+	else
+		DrawMarker(
+			1,
+			gasX,
+			gasY,
+			-200.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			size,
+			size,
+			MARKER_HEIGHT,
+			color[1],
+			color[2],
+			color[3],
+			color[4],
+			false,
+			false,
+			2,
+			false,
+			nil,
+			nil,
+			false
+		)
+	end
 end
 
 local function safeZoneTick()
+	loadTexture()
 
-    loadTexture()
+	local lastDamageCheck = 0
 
-    local lastDamageCheck = 0
+	while SafeZone.active do
+		updateShrink()
+		drawMarker()
 
-    while SafeZone.active do
+		local now = GetGameTimer()
 
-        updateShrink()
-        drawMarker()
+		if now - lastDamageCheck >= 1000 then
+			lastDamageCheck = now
+			checkPlayerPosition()
+		end
 
-        local now = GetGameTimer()
+		Wait(0)
+	end
 
-        if now - lastDamageCheck >= 1000 then
-            lastDamageCheck = now
-            checkPlayerPosition()
-        end
+	removeBlips()
 
-        Wait(0)
-    end
+	if SafeZone.textureLoaded then
+		SetStreamedTextureDictAsNoLongerNeeded(TEXTURE_DICT)
+		SafeZone.textureLoaded = false
+	end
 
-    removeBlips()
-
-    if SafeZone.textureLoaded then
-        SetStreamedTextureDictAsNoLongerNeeded(TEXTURE_DICT)
-        SafeZone.textureLoaded = false
-    end
-
-    SafeZone.inGas = false
-    LocalPlayer.state:set('inSafeZone', nil, false)
+	SafeZone.inGas = false
+	LocalPlayer.state:set("inSafeZone", nil, false)
 end
 
 -- kingg:safezone:start { gas = {x,y,radius}, safe = {x,y,radius} | nil, damage, phase }
-RegisterNetEvent('kingg:safezone:start', function(data)
-    print('safezone:start', json.encode(data, { indent = true }))
-    if SafeZone.active then return end
+RegisterNetEvent("kingg:safezone:start", function(data)
+	print("safezone:start", json.encode(data, { indent = true }))
+	if SafeZone.active then
+		return
+	end
 
-    SafeZone.active = true
-    SafeZone.damage = data.damage or 0
-    SafeZone.phase = data.phase or 1
-    SafeZone.inGas = false
-    SafeZone.shrinking = false
+	SafeZone.active = true
+	SafeZone.damage = data.damage or 0
+	SafeZone.phase = data.phase or 1
+	SafeZone.inGas = false
+	SafeZone.shrinking = false
 
-    SafeZone.gas = {
-        x = data.gas.x,
-        y = data.gas.y,
-        radius = data.gas.radius,
-    }
+	SafeZone.gas = {
+		x = data.gas.x,
+		y = data.gas.y,
+		radius = data.gas.radius,
+	}
 
-    createGasBlip(SafeZone.gas.x, SafeZone.gas.y, SafeZone.gas.radius)
-    print('gas blip created')
-    if data.safe then
-        print('safe blip created')
-        SafeZone.safe = {
-            x = data.safe.x,
-            y = data.safe.y,
-            radius = data.safe.radius,
-        }
+	if data.safe then
+		print("safe blip created")
+		SafeZone.safe = {
+			x = data.safe.x,
+			y = data.safe.y,
+			radius = data.safe.radius,
+		}
 
-        createSafeBlip(SafeZone.safe.x, SafeZone.safe.y, SafeZone.safe.radius)
-    end
-    Wait(3000)
-    print('zone tick started')
-    Wait(200)
-    CreateThread(safeZoneTick)
+		createSafeBlip(SafeZone.safe.x, SafeZone.safe.y, SafeZone.safe.radius)
+	end
+
+	createGasBlip(SafeZone.gas.x, SafeZone.gas.y, SafeZone.gas.radius)
+	print("gas blip created")
+
+	Wait(3000)
+	print("zone tick started")
+	Wait(200)
+	CreateThread(safeZoneTick)
 end)
 
 -- kingg:safezone:phase { phase, damage, target = {x,y,radius}, nextSafe = {x,y,radius} | nil }
-RegisterNetEvent('kingg:safezone:phase', function(phase, damage, target, nextSafe)
-    print('safezone:phase', json.encode({ phase, damage, target, nextSafe }, { indent = true }))
-    if not SafeZone.active then return end
+RegisterNetEvent("kingg:safezone:phase", function(phase, damage, target, nextSafe)
+	print("safezone:phase", json.encode({ phase, damage, target, nextSafe }, { indent = true }))
+	if not SafeZone.active then
+		return
+	end
 
-    SafeZone.phase = phase
-    SafeZone.damage = damage
+	SafeZone.phase = phase
+	SafeZone.damage = damage
 
-    if target then
+	if target then
+		SafeZone.safe = {
+			x = target.x,
+			y = target.y,
+			radius = target.radius,
+		}
+	end
 
-        SafeZone.safe = {
-            x = target.x,
-            y = target.y,
-            radius = target.radius,
-        }
-    end
+	local preview = nextSafe or target
 
-    local preview = nextSafe or target
+	if preview then
+		createSafeBlip(preview.x, preview.y, preview.radius)
+	end
 
-    if preview then
-        createSafeBlip(preview.x, preview.y, preview.radius)
-    end
+	if SafeZone.handlers.onPhaseChange then
+		SafeZone.handlers.onPhaseChange(phase, damage)
+	end
+end)
 
-    if SafeZone.handlers.onPhaseChange then
-        SafeZone.handlers.onPhaseChange(phase, damage)
-    end
+-- kingg:safezone:reveal { x, y, radius }
+RegisterNetEvent("kingg:safezone:reveal", function(safe)
+	if not SafeZone.active or not safe then
+		return
+	end
+
+	SafeZone.safe = {
+		x = safe.x,
+		y = safe.y,
+		radius = safe.radius,
+	}
+
+	createSafeBlip(safe.x, safe.y, safe.radius)
 end)
 
 -- kingg:safezone:shrink { startAt (networkTime), duration (ms) }
-RegisterNetEvent('kingg:safezone:shrink', function(_, duration)
-    if not SafeZone.active or not SafeZone.gas or not SafeZone.safe then return end
+RegisterNetEvent("kingg:safezone:shrink", function(_, duration)
+	if not SafeZone.active or not SafeZone.gas or not SafeZone.safe then
+		return
+	end
 
-    SafeZone.shrinkFromX = SafeZone.gas.x
-    SafeZone.shrinkFromY = SafeZone.gas.y
-    SafeZone.shrinkFromRadius = SafeZone.gas.radius
-    SafeZone.shrinkStartAt = GetNetworkTimeAccurate()
-    SafeZone.shrinkDuration = duration
-    SafeZone.shrinking = true
+	SafeZone.shrinkFromX = SafeZone.gas.x
+	SafeZone.shrinkFromY = SafeZone.gas.y
+	SafeZone.shrinkFromRadius = SafeZone.gas.radius
+	SafeZone.shrinkStartAt = GetNetworkTimeAccurate()
+	SafeZone.shrinkDuration = duration
+	SafeZone.shrinking = true
 end)
 
-RegisterNetEvent('kingg:safezone:stop', function()
+RegisterNetEvent("kingg:safezone:stop", function()
+	SafeZone.active = false
+	SafeZone.gas = nil
+	SafeZone.safe = nil
+	SafeZone.shrinking = false
+	SafeZone.damage = 0
+	SafeZone.phase = 0
+	SafeZone.inGas = false
+	SafeZone.handlers = {}
 
-    SafeZone.active = false
-    SafeZone.gas = nil
-    SafeZone.safe = nil
-    SafeZone.shrinking = false
-    SafeZone.damage = 0
-    SafeZone.phase = 0
-    SafeZone.inGas = false
-    SafeZone.handlers = {}
-
-    LocalPlayer.state:set('inSafeZone', nil, false)
+	LocalPlayer.state:set("inSafeZone", nil, false)
 end)
 
-exports('setSafezoneHandlers', function(handlers)
+exports("setSafezoneHandlers", function(handlers)
+	assert(type(handlers) == "table", "handlers must be a table")
 
-    assert(type(handlers) == 'table', 'handlers must be a table')
-
-    SafeZone.handlers = handlers
+	SafeZone.handlers = handlers
 end)
 
-exports('getSafezoneState', function()
+exports("getSafezoneState", function()
+	local gas = nil
 
-    local gas = nil
+	if SafeZone.gas then
+		gas = {
+			x = SafeZone.gas.x,
+			y = SafeZone.gas.y,
+			radius = SafeZone.gas.radius * MARKER_SCALE,
+		}
+	end
 
-    if SafeZone.gas then
-        gas = {
-            x = SafeZone.gas.x,
-            y = SafeZone.gas.y,
-            radius = SafeZone.gas.radius * MARKER_SCALE,
-        }
-    end
-
-    return {
-        active = SafeZone.active,
-        gas = gas,
-        safe = SafeZone.safe,
-        damage = SafeZone.damage,
-        phase = SafeZone.phase,
-        inGas = SafeZone.inGas,
-        shrinking = SafeZone.shrinking,
-    }
+	return {
+		active = SafeZone.active,
+		gas = gas,
+		safe = SafeZone.safe,
+		damage = SafeZone.damage,
+		phase = SafeZone.phase,
+		inGas = SafeZone.inGas,
+		shrinking = SafeZone.shrinking,
+	}
 end)
-
 
 CreateThread(function()
-    SetBlipAlpha(GetNorthRadarBlip(), 0)
+	SetBlipAlpha(GetNorthRadarBlip(), 0)
 end)

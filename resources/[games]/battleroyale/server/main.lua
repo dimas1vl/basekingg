@@ -6,7 +6,8 @@ GM:on('matchStarted', function(match)
 
     match:emitClients('matchAlive.update', #match:getAlivePlayers(), #match:getAliveSquads())
 
-    local event = ('net.%s:team.coords'):format(GetCurrentResourceName())
+    local coordsEvent = ('net.%s:team.coords'):format(GetCurrentResourceName())
+    local statesEvent = ('net.%s:team.states'):format(GetCurrentResourceName())
 
     CreateThread(function()
 
@@ -16,6 +17,7 @@ GM:on('matchStarted', function(match)
 
                 local squad = match.squads[i]
                 local coordsData = {}
+                local statesData = {}
 
                 for j = 1, #squad.players do
 
@@ -27,6 +29,11 @@ GM:on('matchStarted', function(match)
                         local coords = GetEntityCoords(ped)
 
                         coordsData[src] = { coords.x, coords.y, coords.z }
+
+                        statesData[src] = {
+                            health = (GetEntityHealth(ped) / ((GetEntityMaxHealth(ped) / 100) - 1)) - 100,
+                            armor = GetPedArmour(ped),
+                        }
                     end
                 end
 
@@ -35,7 +42,8 @@ GM:on('matchStarted', function(match)
                     local src = squad.players[j]
 
                     if match.players[src] then
-                        TriggerClientEvent(event, src, coordsData)
+                        TriggerClientEvent(coordsEvent, src, coordsData)
+                        TriggerClientEvent(statesEvent, src, statesData)
                     end
                 end
             end

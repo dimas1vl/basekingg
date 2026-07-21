@@ -47,6 +47,37 @@ for itemName, def in pairs(GItems) do
     end
 end
 
+---@param lootPool table[]
+---@param seed number
+---@param chestIndex number
+---@param ownedWeapons table<string, boolean> | nil
+---@return table entry
+local function pickLootEntry(lootPool, seed, chestIndex, ownedWeapons)
+
+    if not ownedWeapons then
+        return lootPool[LootRng.lootIndex(seed, chestIndex, #lootPool)]
+    end
+
+    local candidates, candidateCount = {}, 0
+
+    for i = 1, #lootPool do
+
+        local entry = lootPool[i]
+        local itemDef = GItems[entry[1]]
+
+        if not (itemDef and itemDef.ammo and ownedWeapons[entry[1]]) then
+            candidateCount = candidateCount + 1
+            candidates[candidateCount] = entry
+        end
+    end
+
+    if candidateCount == 0 then
+        return lootPool[LootRng.lootIndex(seed, chestIndex, #lootPool)]
+    end
+
+    return candidates[LootRng.lootIndex(seed, chestIndex, candidateCount)]
+end
+
 ---@class ChestEntry
 ---@field type string
 ---@field coords number[]
@@ -88,7 +119,7 @@ GM:on('matchStarted', function(match)
     match:setData('nextPickupId', 1)
 end)
 
-GM:registerNetEvent('chest.open', function(match, src, chestIndex)
+GM:registerNetEvent('chest.open', function(match, src, chestIndex, ownedWeapons)
 
     print(('[loot] chest.open: src=%d chestIndex=%s'):format(src, tostring(chestIndex)))
 
@@ -127,7 +158,7 @@ GM:registerNetEvent('chest.open', function(match, src, chestIndex)
     end
 
     local lootPool = CHEST_LOOT[chestType]
-    local loot = lootPool[LootRng.lootIndex(seed, chestIndex, #lootPool)]
+    local loot = pickLootEntry(lootPool, seed, chestIndex, ownedWeapons)
     local itemName = loot[1]
     local itemAmount = loot[2]
 

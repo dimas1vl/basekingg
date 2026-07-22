@@ -53,6 +53,29 @@ local function launchAirdrop(match, pos)
     log('info', ('match %d: airdrop %d launched at %.0f,%.0f,%.0f'):format(match.id, dropId, pos.x, pos.y, pos.z))
 end
 
+---Verifica se (x,y) esta dentro de TODAS as zonas ja calculadas ate a fase atual,
+---nao so da fase atual — evita depender do gerador de zonas nunca deixar o gas
+---"vazar" pra fora da zona anterior.
+---@param szData table
+---@param upToPhase number
+---@param x number
+---@param y number
+---@return boolean
+local function insideAllZones(szData, upToPhase, x, y)
+
+    for p = 1, upToPhase do
+        local z = szData.zones[p]
+
+        if not z or not z.center or not z.radius then return false end
+
+        local dx, dy = x - z.center.x, y - z.center.y
+
+        if (dx * dx + dy * dy) > (z.radius * z.radius) then return false end
+    end
+
+    return true
+end
+
 ---@param match Match
 ---@return vector3 | nil
 local function getAirdropPosition(match)
@@ -76,7 +99,7 @@ local function getAirdropPosition(match)
         local dx = c.x - cx
         local dy = c.y - cy
 
-        if (dx * dx + dy * dy) <= rSq then
+        if (dx * dx + dy * dy) <= rSq and insideAllZones(szData, phase, c.x, c.y) then
             valid[#valid + 1] = c
         end
     end
@@ -85,14 +108,18 @@ local function getAirdropPosition(match)
         return valid[math.random(1, #valid)]
     end
 
-    local angle = math.random() * 2 * math.pi
-    local dist = math.sqrt(math.random()) * zone.radius * 0.85
+    for _ = 1, 8 do
+        local angle = math.random() * 2 * math.pi
+        local dist = math.sqrt(math.random()) * zone.radius * 0.85
+        local x = cx + math.cos(angle) * dist
+        local y = cy + math.sin(angle) * dist
 
-    return vec3(
-        cx + math.cos(angle) * dist,
-        cy + math.sin(angle) * dist,
-        zone.center.z or 50.0
-    )
+        if insideAllZones(szData, phase, x, y) then
+            return vec3(x, y, zone.center.z or 50.0)
+        end
+    end
+
+    return nil
 end
 
 ---@param match Match

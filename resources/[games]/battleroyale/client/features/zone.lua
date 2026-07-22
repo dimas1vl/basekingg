@@ -13,7 +13,8 @@ local dmgPerTick = 0
 local phaseGen = 0
 
 local function fmtTimer(secs)
-	return ("%02d:%02d"):format(math.floor(secs / 60), secs % 60)
+	secs = math.floor(secs)
+	return ("%02d:%02d"):format(secs // 60, secs % 60)
 end
 
 function isCoordsSafezone(x, y)

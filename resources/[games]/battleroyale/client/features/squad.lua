@@ -243,12 +243,10 @@ local function sendSquadToNUI()
 
 			isAlive = info.state == PlayerState.ALIVE or info.state == PlayerState.INJURED
 			if DoesEntityExist(ped) then
-        print("update ui, ped exist")
 				armor = GetPedArmour(ped)
 				health = (GetEntityHealth(ped) / ((GetEntityMaxHealth(ped) / 100) - 1)) - 100
 			else
 				armor = info.armor or 0
-        print("update ui, ped non exist")
 				health = info.health or 100
 			end
 		end

@@ -104,6 +104,20 @@ local function computeIncrementalZone(match, phase)
 	return zones[phase]
 end
 
+---@param center vector3
+---@param radius number
+---@return vector3
+local function randomPointInRadius(center, radius)
+	if not radius or radius <= 0 then
+		return center
+	end
+
+	local angle = math.random() * 2 * math.pi
+	local dist = radius * math.sqrt(math.random())
+
+	return vector3(center.x + math.cos(angle) * dist, center.y + math.sin(angle) * dist, center.z)
+end
+
 ---@param match Match
 local function calculateZones(match)
 	local zones = {}
@@ -112,9 +126,11 @@ local function calculateZones(match)
 	local jitter = dynCfg.radiusJitter or 0
 	local initialR = cfgZone.initialRadius
 	local jitteredInitialR = initialR * (1 - jitter + math.random() * 2 * jitter)
+	local centerAnchor = cfgZone.initialCenter[math.random(#cfgZone.initialCenter)]
+	local initialCenter = randomPointInRadius(centerAnchor, cfgZone.initialCenterRadius)
 
 	zones[1] = {
-		center = cfgZone.initialCenter,
+		center = initialCenter,
 		radius = jitteredInitialR,
 		damage = presets[1].damage,
 		displayTime = presets[1].displayTime,
@@ -215,9 +231,12 @@ local function revealNextZone(match)
 	end
 
 	CreateThread(function()
-		local revealTime = cfgZone.initialReveal or 0
+		local airplaneData = match:getData("airplane")
+		local revealTime = airplaneData and airplaneData.duration or 0
 
 		if revealTime > 0 then
+			match:emitClients("safezone.countdown", 1, revealTime, #szData.zones)
+
 			skippableWait(szData, revealTime * 1000)
 		end
 
@@ -326,6 +345,7 @@ GM:on("airplaneStarted", function(match)
 end)
 
 GM:on("matchStarted", function(match)
+	emitSafezoneEvent(match, "kingg:safezone:showBlips")
 	startPhaseProgression(match)
 end)
 

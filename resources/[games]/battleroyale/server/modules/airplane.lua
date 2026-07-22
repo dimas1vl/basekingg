@@ -2,8 +2,6 @@ while not GM do
 	Wait(0)
 end
 
-local RESOURCE = GetCurrentResourceName()
-
 ---@param zone SafeZoneData
 ---@return vector3 from
 ---@return vector3 to
@@ -12,20 +10,13 @@ local function generateFlightPath(zone)
 	local angle2 = angle1 + math.pi * (0.89 + math.random() * 0.22)
 
 	local alt = Config.BR.airplane.altitude
-	local flightRadius = zone.radius * 0.99
+	local flightRadius = zone.radius + 800.0
 
 	local from =
 		vector3(zone.center.x + math.cos(angle1) * flightRadius, zone.center.y + math.sin(angle1) * flightRadius, alt)
 
 	local to =
 		vector3(zone.center.x + math.cos(angle2) * flightRadius, zone.center.y + math.sin(angle2) * flightRadius, alt)
-
-	local perpAngle = angle1 + math.pi / 2
-	local maxOffset = zone.radius * 0.10
-	local offset = (math.random() * 2 - 1) * maxOffset
-
-	from = vector3(from.x + math.cos(perpAngle) * offset, from.y + math.sin(perpAngle) * offset, alt)
-	to = vector3(to.x + math.cos(perpAngle) * offset, to.y + math.sin(perpAngle) * offset, alt)
 
 	return from, to
 end
@@ -35,7 +26,6 @@ end
 ---@return number
 local function calculateFlightDuration(from, to)
 	local dist = #(from - to)
-
 	return dist / Config.BR.airplane.speed
 end
 
@@ -43,10 +33,8 @@ end
 local function startAirplane(match)
 	math.randomseed(GetGameTimer() + match.id * 7919)
 
-	local initialZone = {
-		center = Config.BR.safezone.initialCenter,
-		radius = Config.BR.safezone.initialRadius,
-	}
+	local szData = match:getData("safezone")
+	local initialZone = szData.zones[1]
 
 	local from, to = generateFlightPath(initialZone)
 	local duration = calculateFlightDuration(from, to)

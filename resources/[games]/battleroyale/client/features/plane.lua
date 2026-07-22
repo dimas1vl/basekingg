@@ -258,10 +258,15 @@ local function startParachuteTracking()
 			local height = heightAboveGround(ped)
 
 			if not inFreeFall and not falling and paraState == -1 and hasLanded then
-				parachuteActive = false
-				RemoveWeaponFromPed(ped, chuteHash)
-
 				hideMeters()
+				parachuteActive = false
+
+				CreateThread(function()
+					Wait(500)
+					RemoveAllPedWeapons(ped)
+					RemoveWeaponFromPed(ped, chuteHash)
+				end)
+
 				break
 			end
 
@@ -271,7 +276,6 @@ local function startParachuteTracking()
 				local coords = GetEntityCoords(ped)
 				local _, gz = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z, false)
 
-				RemoveWeaponFromPed(ped, chuteHash)
 				ClearPedTasksImmediately(ped)
 				SetEntityCoords(ped, coords.x, coords.y, gz)
 
@@ -279,12 +283,18 @@ local function startParachuteTracking()
 				parachuteActive = false
 				SetEntityInvincible(ped, false)
 				SetCloudsAlpha(1.0)
-				RemoveAllPedWeapons(ped)
 				removeZoneMarkers()
 				ClearGpsCustomRoute()
 				Game.session:send("airplane.landed")
 				hideMeters()
 				SetPedCanRagdoll(ped, true)
+
+				CreateThread(function()
+					Wait(500)
+					RemoveAllPedWeapons(ped)
+					RemoveWeaponFromPed(ped, chuteHash)
+				end)
+
 				break
 			end
 
@@ -292,7 +302,7 @@ local function startParachuteTracking()
 				local speed = math.floor(calculateSpeed(ped))
 
 				if not hasLanded and not HasPedGotWeapon(ped, chuteHash, false) and height > cfgPara.autoOpenHeight then
-					GiveWeaponToPed(ped, chuteHash, 1, false, true)
+					GiveWeaponToPed(ped, chuteHash, -1, false, true)
 				end
 
 				if not hasLanded and height <= cfgPara.autoOpenHeight and height >= cfgPara.forceOpenMin then
@@ -544,8 +554,6 @@ Game.session:onNet("airplane.start", function(from, to)
 			local inVehicle = GetVehiclePedIsIn(ped, false) == capturedVeh
 			local vehicleCoords = GetEntityCoords(capturedVeh)
 			local distance = #(vector3(to.x, to.y, cfg.altitude) - vehicleCoords)
-
-			GiveWeaponToPed(ped, GetHashKey("GADGET_PARACHUTE"), 1, false, true)
 
 			if playerInVehicle and not inVehicle then
 				playerInVehicle = false

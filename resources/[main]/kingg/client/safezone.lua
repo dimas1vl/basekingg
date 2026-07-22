@@ -1,7 +1,7 @@
 local TEXTURE_DICT = "safezone"
 local TEXTURE_NAME = "kingg_safezone"
 local MARKER_HEIGHT = 9000.0
-local MARKER_COLOR = { 255, 255, 255, 100 }
+local MARKER_COLOR = { 200, 254, 78, 100 } -- #c8fe4e
 local MARKER_SCALE = 1.98412
 
 ---@param a number
@@ -47,6 +47,7 @@ end
 ---@field shrinkFromRadius number
 ---@field blip number | nil
 ---@field safeBlip number | nil
+---@field blipsRevealed boolean
 ---@field textureLoaded boolean
 ---@field damage number
 ---@field phase number
@@ -64,6 +65,7 @@ local SafeZone = {
 	shrinkFromRadius = 0,
 	blip = nil,
 	safeBlip = nil,
+	blipsRevealed = false,
 	textureLoaded = false,
 	damage = 0,
 	phase = 0,
@@ -104,12 +106,16 @@ end
 ---@param y number
 ---@param radius number
 local function createGasBlip(x, y, radius)
+	if not SafeZone.blipsRevealed then
+		return
+	end
+
 	if SafeZone.blip then
 		RemoveBlip(SafeZone.blip)
 	end
 
 	local radiusBlip = AddBlipForRadius(x, y, 0.0, radius)
-	SetBlipColour(radiusBlip, 43)
+	SetBlipColour(radiusBlip, 2)
 	SetBlipAlpha(radiusBlip, 255)
 	SetBlipSprite(radiusBlip, 10)
 	-- SetBlipSprite(radiusBlip, 959)
@@ -128,6 +134,10 @@ end
 ---@param y number
 ---@param radius number
 local function createSafeBlip(x, y, radius)
+	if not SafeZone.blipsRevealed then
+		return
+	end
+
 	if SafeZone.safeBlip then
 		RemoveBlip(SafeZone.safeBlip)
 	end
@@ -318,6 +328,7 @@ RegisterNetEvent("kingg:safezone:start", function(data)
 	SafeZone.phase = data.phase or 1
 	SafeZone.inGas = false
 	SafeZone.shrinking = false
+	SafeZone.blipsRevealed = false
 
 	SafeZone.gas = {
 		x = data.gas.x,
@@ -389,6 +400,23 @@ RegisterNetEvent("kingg:safezone:reveal", function(safe)
 	createSafeBlip(safe.x, safe.y, safe.radius)
 end)
 
+-- kingg:safezone:showBlips {} — libera os blips de gas/safe no mapa (a borda em si ja e visivel antes disso)
+RegisterNetEvent("kingg:safezone:showBlips", function()
+	if not SafeZone.active or SafeZone.blipsRevealed then
+		return
+	end
+
+	SafeZone.blipsRevealed = true
+
+	if SafeZone.gas then
+		createGasBlip(SafeZone.gas.x, SafeZone.gas.y, SafeZone.gas.radius)
+	end
+
+	if SafeZone.safe then
+		createSafeBlip(SafeZone.safe.x, SafeZone.safe.y, SafeZone.safe.radius)
+	end
+end)
+
 -- kingg:safezone:shrink { startAt (networkTime), duration (ms) }
 RegisterNetEvent("kingg:safezone:shrink", function(_, duration)
 	if not SafeZone.active or not SafeZone.gas or not SafeZone.safe then
@@ -411,6 +439,7 @@ RegisterNetEvent("kingg:safezone:stop", function()
 	SafeZone.damage = 0
 	SafeZone.phase = 0
 	SafeZone.inGas = false
+	SafeZone.blipsRevealed = false
 	SafeZone.handlers = {}
 
 	LocalPlayer.state:set("inSafeZone", nil, false)

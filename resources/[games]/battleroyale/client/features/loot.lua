@@ -55,7 +55,8 @@ local function GenerateChests(seed)
 	allChests = {}
 
 	local sz = Config.BR.safezone
-	local cx, cy = sz.initialCenter.x, sz.initialCenter.y
+	local state = exports["kingg"]:getSafezoneState()
+	local cx, cy = state.gas.x, state.gas.y
 	local radiusSq = sz.initialRadius * sz.initialRadius
 	local spawnChance = Config.BR.loot.chestSpawnChance
 	local typeCount = #CHEST_CATEGORIES
@@ -180,9 +181,8 @@ function Loot:activate(ctx)
 	end)
 
 	ctx:tick(function()
-		local ft = GetFrameTime()
 		self:updatePickupEffects()
-		Wait(ft * 1000 / 60)
+		Wait(16)
 	end)
 end
 
@@ -470,7 +470,6 @@ Game.session:listen("interact.pressed", function()
 	end
 
 	local ped = PlayerPedId()
-
 	local chestIdx, chest = findClosestChest()
 
 	if not chest then
@@ -485,6 +484,11 @@ Game.session:listen("interact.pressed", function()
 			end
 		end
 
+		return
+	end
+
+	local chestDist = #(GetEntityCoords(ped) - GetEntityCoords(chest.entity))
+	if chestDist > CHEST_INTERACT_RANGE then
 		return
 	end
 

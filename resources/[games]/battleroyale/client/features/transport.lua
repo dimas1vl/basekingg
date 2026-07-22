@@ -52,7 +52,7 @@ function Transport:spawn(v)
 		return
 	end
 	SetVehicleDirtLevel(v.entity, 0.0)
-	SetEntityCompletelyDisableCollision(v.entity, true, false)
+	SetEntityCompletelyDisableCollision(v.entity, false, false)
 	FreezeEntityPosition(v.entity, true)
 	SetEntityAlpha(v.entity, 180, false)
 	SetVehicleDoorsLocked(v.entity, 2)

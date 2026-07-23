@@ -489,12 +489,29 @@ Citizen.CreateThread(function()
 	RequestIpl("h4_islandx_mansion_b_lod")
 	RequestIpl("h4_ne_ipl_08")
 
+	for i = 0, 15 do
+		EnableDispatchService(i, false)
+	end
+
 	while true do
 		SetMaxWantedLevel(0)
 		SetPlayerWantedLevel(PlayerId(), 0, false)
 		SetPlayerWantedLevelNow(PlayerId(), false)
 		Wait(1000)
 	end
+end)
+
+Citizen.CreateThread(function()
+	SetBigmapActive(true, true)
+
+	for i = 1, 5 do
+		SetMinimapComponentPosition("bigmap", "L", "B", 0.3000, -0.20, 0.530, 0.537)
+		SetMinimapComponentPosition("bigmap_mask", "L", "B", 0.200, -0.20, 0.566, 0.537)
+		SetMinimapComponentPosition("bigmap_blur", "L", "B", 0.200, -0.20, 0.566, 0.537)
+	end
+
+	Wait(600)
+	SetBigmapActive(false, false)
 end)
 
 local pickups = {
@@ -699,14 +716,15 @@ CreateThread(function()
 		SetPedAudioFootstepQuiet(PlayerPedId(), false)
 
 		local _ped = PlayerPedId()
-		if not LocalPlayer.state.domHolstering then
-			SetPedStealthMovement(_ped, false, 0)
-			if IsPedShooting(_ped) or IsPlayerFreeAiming(PlayerId()) then
-				SetPedUsingActionMode(_ped, true, -1, "DEFAULT_ACTION")
-			else
-				SetPedUsingActionMode(_ped, false, -1, 0)
-			end
-		end
+		SetPedStealthMovement(_ped, false, 0)
+
+		-- if not LocalPlayer.state.domHolstering then
+		-- 	if IsPedShooting(_ped) or IsPlayerFreeAiming(PlayerId()) then
+		-- 		SetPedUsingActionMode(_ped, true, -1, "DEFAULT_ACTION")
+		-- 	else
+		-- 		SetPedUsingActionMode(_ped, false, -1, 0)
+		-- 	end
+		-- end
 
 		DisableControlAction(0, 81, true)
 		DisableControlAction(0, 82, true)
@@ -750,6 +768,7 @@ local CROUCH_STRAFE = "move_ped_crouched_strafing"
 local function setCrouch(state)
 	local ped = PlayerPedId()
 	if state then
+		SetPedUsingActionMode(_ped, true, -1, "DEFAULT_ACTION")
 		RequestAnimSet(CROUCH_CLIPSET)
 		RequestAnimSet(CROUCH_STRAFE)
 		local deadline = GetGameTimer() + 1000

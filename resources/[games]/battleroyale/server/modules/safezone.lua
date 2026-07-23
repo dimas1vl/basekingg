@@ -244,6 +244,8 @@ local function revealNextZone(match)
 			return
 		end
 
+		emitSafezoneEvent(match, "kingg:safezone:showBlips")
+
 		emitSafezoneEvent(match, "kingg:safezone:reveal", {
 			x = next.center.x,
 			y = next.center.y,
@@ -269,6 +271,17 @@ local function startPhaseProgression(match)
 	log("info", ("match %d: safezone phase progression started with %d phases"):format(match.id, #zones))
 
 	CreateThread(function()
+		local airplaneData = match:getData("airplane")
+
+		if airplaneData and airplaneData.startedAt then
+			local elapsed = GetGameTimer() - airplaneData.startedAt
+			local remaining = (airplaneData.duration * 1000) - elapsed
+
+			if remaining > 0 then
+				skippableWait(szData, remaining)
+			end
+		end
+
 		for phase = 2, #zones do
 			local prevZone = zones[phase - 1]
 
@@ -345,7 +358,6 @@ GM:on("airplaneStarted", function(match)
 end)
 
 GM:on("matchStarted", function(match)
-	emitSafezoneEvent(match, "kingg:safezone:showBlips")
 	startPhaseProgression(match)
 end)
 

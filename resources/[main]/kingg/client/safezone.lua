@@ -350,9 +350,6 @@ RegisterNetEvent("kingg:safezone:start", function(data)
 	createGasBlip(SafeZone.gas.x, SafeZone.gas.y, SafeZone.gas.radius)
 	print("gas blip created")
 
-	Wait(3000)
-	print("zone tick started")
-	Wait(200)
 	CreateThread(safeZoneTick)
 end)
 

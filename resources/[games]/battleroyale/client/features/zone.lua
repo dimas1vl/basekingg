@@ -66,6 +66,8 @@ function Zone:updateRadarZoom()
 end
 
 RegisterNetEvent("kingg:safezone:start", function(data)
+	Game.removeBlip(radarBlip)
+  
 	print(
 		("[zone] kingg:safezone:start received — damage=%s phase=%s"):format(
 			tostring(data.damage),

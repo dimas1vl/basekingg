@@ -135,7 +135,7 @@ local function createZoneMarkers()
 				label = zone.tag,
 				color = "#ffffff",
 				displayDistance = false,
-				drawDistance = 3000.0,
+				drawDistance = 15000.0,
 				size = 2.3,
 				groundZ = gz or zone.pos.z,
 				labelZ = 400.0,
@@ -482,11 +482,20 @@ Game.session:onNet("airplane.playerJumped", function(id)
 	SetPedCanRagdoll(ped, false)
 end)
 
+Game.session:listen("joined", function()
+	CreateThread(function()
+		Game.requestAsset(cfg.model)
+		Game.requestAsset(cfg.pilotModel)
+	end)
+end)
+
 Game.session:onNet("airplane.start", function(from, to)
 	playerFollowing = false
 	playersJumped = {}
 	flightActive = true
 	playerInVehicle = true
+
+	createZoneMarkers()
 
 	if not Game.requestAsset(cfg.model) or not Game.requestAsset(cfg.pilotModel) then
 		flightActive = false
@@ -537,8 +546,6 @@ Game.session:onNet("airplane.start", function(from, to)
 	AddPointToGpsCustomRoute(from.x, from.y, from.z)
 	SetGpsCustomRouteRender(true, 25, 70)
 
-	createZoneMarkers()
-
 	FreezeEntityPosition(ped, false)
 	SetEntityInvincible(ped, true)
 	SetPedIntoVehicle(ped, vehicle, 1)
@@ -557,6 +564,9 @@ Game.session:onNet("airplane.start", function(from, to)
 
 			if playerInVehicle and not inVehicle then
 				playerInVehicle = false
+
+				local heading = GetGameplayCamRot(2).z
+				SetEntityHeading(ped, heading)
 
 				Game.session:send("airplane.jumped")
 				Game.session:send("airplane.leaderJump", GetEntityHeading(ped))
@@ -653,3 +663,5 @@ Game.session:listen("ended", function()
 	playersJumped = {}
 	cleanup()
 end)
+
+CreateThread(function() end)

@@ -45,6 +45,7 @@ local function startAirplane(match)
 		from = from,
 		to = to,
 		duration = duration,
+		startedAt = GetGameTimer(),
 		routeLength = routeLength,
 		serverTimeEnd = serverTimeEnd,
 		jumped = {},
@@ -70,6 +71,11 @@ local function startAirplane(match)
 		)
 	)
 
+	match:setState(MatchState.STARTED)
+	match:emitClients("match.stateChange", MatchState.STARTED)
+
+	GM:emit("matchStarted", match)
+
 	CreateThread(function()
 		Wait(math.floor(duration * 1000))
 
@@ -84,17 +90,6 @@ local function startAirplane(match)
 		match:emitClients("airplane.eject")
 
 		log("info", ("match %d: airplane flight ended, ejecting remaining players"):format(match.id))
-
-		Wait(5000)
-
-		if match.state ~= MatchState.AIRPLANE then
-			return
-		end
-
-		match:setState(MatchState.STARTED)
-		match:emitClients("match.stateChange", MatchState.STARTED)
-
-		GM:emit("matchStarted", match)
 	end)
 end
 
@@ -110,17 +105,6 @@ local function checkAllJumped(match)
 		airplane.finished = true
 
 		log("info", ("match %d: all players jumped from airplane"):format(match.id))
-
-		Wait(3000)
-
-		if match.state ~= MatchState.AIRPLANE then
-			return
-		end
-
-		match:setState(MatchState.STARTED)
-		match:emitClients("match.stateChange", MatchState.STARTED)
-
-		GM:emit("matchStarted", match)
 	end
 end
 

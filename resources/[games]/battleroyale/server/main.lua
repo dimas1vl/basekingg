@@ -159,10 +159,11 @@ GM:on('matchEnding', function(match)
 
             local src = allPlayers[i]
             local exists = DoesPlayerExist(tostring(src))
+            local stillInMatch = match:isPlayer(src)
 
-            print(('[BR-DEBUG] winner lobby-return: src=%d exists=%s'):format(src, tostring(exists)))
+            print(('[BR-DEBUG] winner lobby-return: src=%d exists=%s stillInMatch=%s'):format(src, tostring(exists), tostring(stillInMatch)))
 
-            if exists then
+            if exists and stillInMatch then
                 TriggerClientEvent('lobby:displayLobby', src)
                 print(('[BR-DEBUG] lobby:displayLobby sent to src=%d'):format(src))
             end

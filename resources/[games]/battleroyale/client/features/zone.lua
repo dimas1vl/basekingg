@@ -43,13 +43,11 @@ function Zone:teardown(ctx)
 	Game.removeBlip(radarBlip)
 	radarBlip = nil
 	SetTimecycleModifier(cfgTimecycle.default)
-	ClearTimecycleModifier()
-	outsideZone = false
+	-- ClearTimecycleModifier()
 	gasDmgStart = 0
 	hasRadar = false
 	winCelebration = false
 	currentStage = 0
-	dmgPerTick = 0
 	phaseGen = phaseGen + 1
 	SetRadarZoom(0)
 end
@@ -67,7 +65,7 @@ end
 
 RegisterNetEvent("kingg:safezone:start", function(data)
 	Game.removeBlip(radarBlip)
-  
+
 	print(
 		("[zone] kingg:safezone:start received — damage=%s phase=%s"):format(
 			tostring(data.damage),
@@ -146,6 +144,8 @@ end)
 
 RegisterNetEvent("kingg:safezone:phase", function(phase, damage)
 	print(("[zone] kingg:safezone:phase received — phase=%s damage=%s"):format(tostring(phase), tostring(damage)))
+	Game.removeBlip(radarBlip)
+	radarBlip = nil
 	currentStage = phase
 	dmgPerTick = damage
 	Game.ui.send("hud:safezone", {

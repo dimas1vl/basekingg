@@ -14,9 +14,11 @@ local collectedCount = 0
 local validSlots = {}
 local platformPos = {}
 local platformEntities = {}
+local platformBlips = {}
 local loadingEntities = {}
 local channeling = false
 local cycleStart = 0
+local totemGen = 0
 
 function Totem:setup(ctx)
 	cards = {}
@@ -26,45 +28,70 @@ function Totem:setup(ctx)
 	validSlots = {}
 	platformPos = {}
 	platformEntities = {}
+	platformBlips = {}
 	loadingEntities = {}
 	channeling = false
 	cycleStart = 0
 end
 
 function Totem:teardown(ctx)
-	self:flush()
+	self:clear()
 end
 
-function Totem:flush()
-	channeling = false
-	cycleStart = 0
-	cards = {}
-	collectedCount = 0
-	validSlots = {}
+function Totem:clear()
+	local cardEntityCount, cardBlipCount, platformEntityCount, platformBlipCount, loadingEntityCount = 0, 0, 0, 0, 0
 
 	for _, e in pairs(cardEntities) do
 		if DoesEntityExist(e) then
 			DeleteEntity(e)
+			cardEntityCount = cardEntityCount + 1
 		end
 	end
 	for _, b in pairs(cardBlips) do
 		Game.removeBlip(b)
+		cardBlipCount = cardBlipCount + 1
 	end
 	for _, e in pairs(platformEntities) do
 		if DoesEntityExist(e) then
 			DeleteEntity(e)
+			platformEntityCount = platformEntityCount + 1
 		end
+	end
+	for _, b in pairs(platformBlips) do
+		Game.removeBlip(b)
+		platformBlipCount = platformBlipCount + 1
 	end
 	for _, e in pairs(loadingEntities) do
 		if DoesEntityExist(e) then
 			DeleteEntity(e)
+			loadingEntityCount = loadingEntityCount + 1
 		end
 	end
+
+	print(
+		("[totem] clear: cardEntities=%d cardBlips=%d platformEntities=%d platformBlips=%d loadingEntities=%d"):format(
+			cardEntityCount,
+			cardBlipCount,
+			platformEntityCount,
+			platformBlipCount,
+			loadingEntityCount
+		)
+	)
 
 	cardEntities = {}
 	cardBlips = {}
 	platformEntities = {}
+	platformBlips = {}
 	loadingEntities = {}
+
+	cycleStart = 0
+	collectedCount = 0
+
+	cards = {}
+	validSlots = {}
+
+	channeling = false
+	totemGen = totemGen + 1
 end
 
 function Totem:nearestCard()
@@ -88,25 +115,34 @@ function Totem:nearestPlatform()
 end
 
 Game.session:onNet("revive.init", function(slots)
-	Totem:flush()
 	validSlots = slots or {}
 	collectedCount = 0
 
 	platformPos = gPlatformCoords
 
+	local createdCount = 0
+
 	for i = 1, #validSlots do
 		local idx = validSlots[i]
 		local p = platformPos[idx]
 		if p then
-			Game.addBlip(vec3(p[1], p[2], p[3]), {
+			platformBlips[idx] = Game.addBlip(vec3(p[1], p[2], p[3]), {
 				icon = 398,
 				color = 2,
 				scale = 0.6,
 				shortRange = true,
 				label = "Plataforma de Revive",
 			})
+			createdCount = createdCount + 1
 		end
 	end
+
+	print(
+		("[totem] revive.init: recebido %d slot(s), %d blip(s) de plataforma criado(s)"):format(
+			#validSlots,
+			createdCount
+		)
+	)
 
 	CreateThread(function()
 		while Game.session:active() do
@@ -154,7 +190,7 @@ Game.session:onNet("revive.init", function(slots)
 							SetModelAsNoLongerNeeded(h)
 							cardBlips[id] = Game.addBlip(vec3(c.x, c.y, c.z), {
 								icon = 306,
-								color = 5,
+								color = 2,
 								scale = 0.5,
 								shortRange = true,
 							})
@@ -219,11 +255,17 @@ Game.session:onNet("revive.platformsUpdate", function(newSlots)
 		newSet[validSlots[i]] = true
 	end
 	for idx in pairs(oldSet) do
-		if not newSet[idx] and platformEntities[idx] then
-			if DoesEntityExist(platformEntities[idx]) then
-				DeleteEntity(platformEntities[idx])
+		if not newSet[idx] then
+			if platformEntities[idx] then
+				if DoesEntityExist(platformEntities[idx]) then
+					DeleteEntity(platformEntities[idx])
+				end
+				platformEntities[idx] = nil
 			end
-			platformEntities[idx] = nil
+			if platformBlips[idx] then
+				Game.removeBlip(platformBlips[idx])
+				platformBlips[idx] = nil
+			end
 		end
 	end
 end)
@@ -378,9 +420,10 @@ AddEventHandler("onResourceStop", function(res)
 	if res ~= Game.resource then
 		return
 	end
-	Totem:flush()
+
+	Totem:clear()
 end)
 
 Game.session:listen("ended", function()
-	Totem:flush()
+	Totem:clear()
 end)

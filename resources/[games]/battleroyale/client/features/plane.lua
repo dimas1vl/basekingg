@@ -1,5 +1,3 @@
-local Plane = Game.module("plane")
-
 local cfg = Config.BR.airplane
 local cfgPara = Config.BR.parachute
 
@@ -663,5 +661,3 @@ Game.session:listen("ended", function()
 	playersJumped = {}
 	cleanup()
 end)
-
-CreateThread(function() end)

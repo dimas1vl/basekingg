@@ -80,8 +80,8 @@ function Game.addBlip(pos, opts)
     if opts.heading then
         ShowHeadingIndicatorOnBlip(b, true)
     end
-    SetBlipColour(b, opts.color or 0)
     SetBlipSprite(b, opts.icon or 1)
+    SetBlipColour(b, opts.color or 0)
     SetBlipAsShortRange(b, opts.shortRange ~= false)
     if opts.priority then
         SetBlipPriority(b, opts.priority)

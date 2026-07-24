@@ -179,7 +179,7 @@ Game.session:onNet("airdrop.spawn", function(dropId, x, y, z, startHeight)
 
 	dropBlip = Game.addBlip(dropPos, {
 		icon = 94,
-		color = 28,
+		color = 0,
 		scale = 0.9,
 		label = "Airdrop",
 		shortRange = false,
@@ -448,7 +448,7 @@ Game.session:onNet("airdrop.opening", function(dropId, openerSrc)
 		end
 
 		if DoesBlipExist(dropBlip) then
-			SetBlipColour(dropBlip, 28)
+			SetBlipColour(dropBlip, 0)
 		end
 	end)
 end)

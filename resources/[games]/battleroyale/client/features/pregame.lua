@@ -82,7 +82,7 @@ function Pregame:applyPassive(ped)
 
     SetEntityInvincible(ped, true)
     SetPlayerInvincible(PlayerId(), true)
-    SetEntityAlpha(ped, 80, false)
+    -- SetEntityAlpha(ped, 80, false)
     SetCanAttackFriendly(ped, false, false)
     NetworkSetFriendlyFireOption(false)
 end
@@ -92,7 +92,7 @@ function Pregame:removePassive(ped)
 
     SetEntityInvincible(ped, false)
     SetPlayerInvincible(PlayerId(), false)
-    ResetEntityAlpha(ped)
+    -- ResetEntityAlpha(ped)
     SetCanAttackFriendly(ped, true, false)
     NetworkSetFriendlyFireOption(true)
 end

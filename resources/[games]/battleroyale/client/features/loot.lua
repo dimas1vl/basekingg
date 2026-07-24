@@ -38,7 +38,7 @@ local function getOwnedWeapons()
 	return owned
 end
 
-local PICKUP_COOLDOWN_MS = 1000
+local PICKUP_COOLDOWN_MS = 200
 
 local allChests = {}
 local visibleChests = {}
@@ -529,7 +529,6 @@ Game.session:listen("interact.pressed", function()
 			opening = false
 			activeCancel = nil
 			ClearPedTasks(PlayerPedId())
-			pickupCooldown = GetGameTimer() + PICKUP_COOLDOWN_MS
 
 			Core._setBusy(false)
 
@@ -548,7 +547,7 @@ Game.session:listen("interact.pressed", function()
 			opening = false
 			activeCancel = nil
 			ClearPedTasks(PlayerPedId())
-			pickupCooldown = GetGameTimer() + (PICKUP_COOLDOWN_MS / 3)
+			pickupCooldown = GetGameTimer() + PICKUP_COOLDOWN_MS
 			Core._setBusy(false)
 		end,
 	})

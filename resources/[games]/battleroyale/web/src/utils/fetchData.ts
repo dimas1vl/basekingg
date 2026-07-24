@@ -13,5 +13,11 @@ export async function fetchData<T = unknown>(event: string, data?: unknown, mock
     body: JSON.stringify(data ?? {}),
   })
 
-  return resp.json()
+  const text = await resp.text()
+
+  if (!text) {
+    return {} as T
+  }
+
+  return JSON.parse(text)
 }

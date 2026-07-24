@@ -1,7 +1,7 @@
 local TEXTURE_DICT = "safezone"
 local TEXTURE_NAME = "kingg_safezone"
 local MARKER_HEIGHT = 9000.0
-local MARKER_COLOR = { 200, 254, 78, 100 } -- #c8fe4e
+local MARKER_COLOR = { 46, 125, 50, 100 } -- verde (mesmo tom do blip colour 2)
 local MARKER_SCALE = 1.98412
 
 ---@param a number
@@ -115,10 +115,9 @@ local function createGasBlip(x, y, radius)
 	end
 
 	local radiusBlip = AddBlipForRadius(x, y, 0.0, radius)
+	SetBlipSprite(radiusBlip, 10)
 	SetBlipColour(radiusBlip, 2)
 	SetBlipAlpha(radiusBlip, 255)
-	SetBlipSprite(radiusBlip, 10)
-	-- SetBlipSprite(radiusBlip, 959)
 	SetBlipAsShortRange(radiusBlip, true)
 	SetBlipHiddenOnLegend(radiusBlip, true)
 	SetBlipHighDetail(radiusBlip, true)
@@ -143,8 +142,8 @@ local function createSafeBlip(x, y, radius)
 	end
 
 	SafeZone.safeBlip = AddBlipForRadius(x, y, 0.0, radius)
-	SetBlipColour(SafeZone.safeBlip, 0)
 	SetBlipSprite(SafeZone.safeBlip, 10)
+	SetBlipColour(SafeZone.safeBlip, 0)
 	SetBlipAlpha(SafeZone.safeBlip, 255)
 	SetBlipScale(SafeZone.safeBlip, radius)
 end
@@ -162,8 +161,6 @@ local function updateShrink()
 		SafeZone.gas.y = SafeZone.safe.y
 		SafeZone.gas.radius = SafeZone.safe.radius
 		SafeZone.shrinking = false
-		SetBlipSprite(SafeZone.blip, 10)
-		-- SetBlipSprite(SafeZone.blip, 959)
 		return
 	end
 
@@ -176,8 +173,6 @@ local function updateShrink()
 	if SafeZone.blip then
 		SetBlipCoords(SafeZone.blip, SafeZone.gas.x, SafeZone.gas.y, 0.0)
 		SetBlipScale(SafeZone.blip, SafeZone.gas.radius)
-		-- SetBlipSprite(SafeZone.blip, 958)
-		SetBlipSprite(SafeZone.blip, 10)
 	end
 end
 

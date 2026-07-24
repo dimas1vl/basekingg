@@ -1,8 +1,18 @@
 local TEXTURE_DICT = "safezone"
 local TEXTURE_NAME = "kingg_safezone"
 local MARKER_HEIGHT = 9000.0
-local MARKER_COLOR = { 46, 125, 50, 100 } -- verde (mesmo tom do blip colour 2)
+local WALL_ALPHA = 128 -- 0-255
+local MARKER_COLOR = { 46, 125, 50, WALL_ALPHA }
 local MARKER_SCALE = 1.98412
+
+local WALL_MIN_HEIGHT = 1000.0
+local WALL_MAX_HEIGHT = 15000.0
+local WALL_MIN_TILE = 50.0
+local WALL_MAX_TILE = 2500.0
+local WALL_SEGMENTS_FAR = 32
+local WALL_SEGMENTS_NEAR = 64
+local WALL_TILE_WIDTH_SCALE = 2
+local WALL_EDGE_CHECK_INTERVAL = 100
 
 ---@param a number
 ---@param b number
@@ -72,6 +82,12 @@ local SafeZone = {
 	inGas = false,
 	handlers = {},
 }
+
+local wallMaxRadiusSeen = 0
+local wallSegments = WALL_SEGMENTS_FAR
+local wallIsOutside = false
+local wallIsNearEdge = false
+local wallLastCheckAt = 0
 
 -- 2.3 addon blip multiplier
 
@@ -213,6 +229,151 @@ local function checkPlayerPosition()
 	end
 end
 
+---@param cz number
+---@param topZ number
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@param u1 number
+---@param u2 number
+---@param uvVertical number
+---@param color number[]
+local function drawWallFaces(cz, topZ, x1, y1, x2, y2, u1, u2, uvVertical, color)
+	if wallIsNearEdge or wallIsOutside then
+		DrawTexturedPoly(
+			x2,
+			y2,
+			topZ,
+			x1,
+			y1,
+			topZ,
+			x1,
+			y1,
+			cz,
+			color[1],
+			color[2],
+			color[3],
+			color[4],
+			TEXTURE_DICT,
+			TEXTURE_NAME,
+			u2,
+			uvVertical,
+			0.0,
+			u1,
+			uvVertical,
+			0.0,
+			u1,
+			0.0,
+			0.0
+		)
+		DrawTexturedPoly(
+			x2,
+			y2,
+			cz,
+			x2,
+			y2,
+			topZ,
+			x1,
+			y1,
+			cz,
+			color[1],
+			color[2],
+			color[3],
+			color[4],
+			TEXTURE_DICT,
+			TEXTURE_NAME,
+			u2,
+			0.0,
+			0.0,
+			u2,
+			uvVertical,
+			0.0,
+			u1,
+			0.0,
+			0.0
+		)
+	end
+
+	if wallIsNearEdge or not wallIsOutside then
+		DrawTexturedPoly(
+			x1,
+			y1,
+			cz,
+			x1,
+			y1,
+			topZ,
+			x2,
+			y2,
+			topZ,
+			color[1],
+			color[2],
+			color[3],
+			color[4],
+			TEXTURE_DICT,
+			TEXTURE_NAME,
+			u1,
+			0.0,
+			0.0,
+			u1,
+			uvVertical,
+			0.0,
+			u2,
+			uvVertical,
+			0.0
+		)
+		DrawTexturedPoly(
+			x1,
+			y1,
+			cz,
+			x2,
+			y2,
+			topZ,
+			x2,
+			y2,
+			cz,
+			color[1],
+			color[2],
+			color[3],
+			color[4],
+			TEXTURE_DICT,
+			TEXTURE_NAME,
+			u1,
+			0.0,
+			0.0,
+			u2,
+			uvVertical,
+			0.0,
+			u2,
+			0.0,
+			0.0
+		)
+	end
+end
+
+---@param radius number
+local function updateWallEdgeState(cx, cy, radius)
+	if GetGameTimer() - wallLastCheckAt < WALL_EDGE_CHECK_INTERVAL then
+		return
+	end
+
+	wallLastCheckAt = GetGameTimer()
+
+	local coords = GetEntityCoords(PlayerPedId())
+	local dist = #(vector2(coords.x, coords.y) - vector2(cx, cy))
+
+	wallIsOutside = dist > radius
+	wallIsNearEdge = radius <= 100 or (dist > radius - math.min(radius * 0.01, 20) and dist < radius + 10)
+
+	if
+		radius <= 800 or (dist > radius - math.max(radius * 0.2, 200) and dist < radius + math.max(radius * 0.2, 200))
+	then
+		wallSegments = WALL_SEGMENTS_NEAR
+	else
+		wallSegments = WALL_SEGMENTS_FAR
+	end
+end
+
 local function drawMarker()
 	if not SafeZone.gas then
 		return
@@ -221,37 +382,15 @@ local function drawMarker()
 	local gasX = SafeZone.gas.x
 	local gasY = SafeZone.gas.y
 	local gasRadius = SafeZone.gas.radius
-	local size = gasRadius * MARKER_SCALE
 	local color = MARKER_COLOR
 
-	if SafeZone.textureLoaded then
-		DrawMarker(
-			1,
-			gasX,
-			gasY,
-			-200.0,
-			0.0,
-			0.0,
-			0.0,
-			0.0,
-			0.0,
-			0.0,
-			size,
-			size,
-			MARKER_HEIGHT,
-			color[1],
-			color[2],
-			color[3],
-			color[4],
-			false,
-			false,
-			2,
-			false,
-			TEXTURE_DICT,
-			TEXTURE_NAME,
-			false
-		)
-	else
+	if gasRadius > wallMaxRadiusSeen then
+		wallMaxRadiusSeen = gasRadius
+	end
+
+	if not SafeZone.textureLoaded then
+		local size = gasRadius * MARKER_SCALE
+
 		DrawMarker(
 			1,
 			gasX,
@@ -278,6 +417,43 @@ local function drawMarker()
 			nil,
 			false
 		)
+
+		return
+	end
+
+	updateWallEdgeState(gasX, gasY, gasRadius)
+
+	local t = wallMaxRadiusSeen > 0 and math.min(gasRadius / wallMaxRadiusSeen, 1.0) or 1.0
+	local height = WALL_MIN_HEIGHT + (WALL_MAX_HEIGHT - WALL_MIN_HEIGHT) * t
+	local tile = WALL_MIN_TILE + (WALL_MAX_TILE - WALL_MIN_TILE) * t
+	local tileWidth = tile * WALL_TILE_WIDTH_SCALE
+
+	local circumference = 2.0 * math.pi * gasRadius
+	local uvHorizontal = circumference / tileWidth
+	local uvVertical = height / tile
+
+	local cz = -200.0
+	local topZ = cz + height
+
+	local step = (2.0 * math.pi) / wallSegments
+	local cosStep = math.cos(step)
+	local sinStep = math.sin(step)
+
+	local dx, dy = gasRadius, 0.0
+
+	for i = 0, wallSegments - 1 do
+		local x1, y1 = gasX + dx, gasY + dy
+
+		local ndx = dx * cosStep - dy * sinStep
+		local ndy = dx * sinStep + dy * cosStep
+		dx, dy = ndx, ndy
+
+		local x2, y2 = gasX + dx, gasY + dy
+
+		local u1 = (i / wallSegments) * uvHorizontal
+		local u2 = ((i + 1) / wallSegments) * uvHorizontal
+
+		drawWallFaces(cz, topZ, x1, y1, x2, y2, u1, u2, uvVertical, color)
 	end
 end
 
@@ -324,6 +500,12 @@ RegisterNetEvent("kingg:safezone:start", function(data)
 	SafeZone.inGas = false
 	SafeZone.shrinking = false
 	SafeZone.blipsRevealed = false
+
+	wallMaxRadiusSeen = 0
+	wallSegments = WALL_SEGMENTS_FAR
+	wallIsOutside = false
+	wallIsNearEdge = false
+	wallLastCheckAt = 0
 
 	SafeZone.gas = {
 		x = data.gas.x,
@@ -433,6 +615,12 @@ RegisterNetEvent("kingg:safezone:stop", function()
 	SafeZone.inGas = false
 	SafeZone.blipsRevealed = false
 	SafeZone.handlers = {}
+
+	wallMaxRadiusSeen = 0
+	wallSegments = WALL_SEGMENTS_FAR
+	wallIsOutside = false
+	wallIsNearEdge = false
+	wallLastCheckAt = 0
 
 	LocalPlayer.state:set("inSafeZone", nil, false)
 end)
